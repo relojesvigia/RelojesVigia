@@ -22,7 +22,10 @@ import {
   Clock,
   Shield,
   UserCheck,
-  MapPin
+  MapPin,
+  Home,
+  Palette,
+  Watch
 } from 'lucide-react';
 
 // --- Types ---
@@ -65,7 +68,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
             onClick={() => setPage(link.value)}
             className={`font-serif tracking-[0.2em] uppercase text-xs transition-colors duration-300 ${
               currentPage === link.value 
-                ? 'text-primary border-b border-primary pb-1' 
+                ? 'text-primary' 
                 : 'text-secondary hover:text-primary'
             }`}
           >
@@ -184,12 +187,15 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
       {/* Hero Section */}
       <section className="relative h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1920" 
-            alt="Hero Watch" 
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
             className="w-full h-full object-cover opacity-40"
-            referrerPolicy="no-referrer"
-          />
+          >
+            <source src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/HeroVideo" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-surface via-transparent to-surface" />
         </div>
 
@@ -206,7 +212,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-3xl md:text-8xl font-serif text-on-surface leading-tight mb-6 md:mb-8"
+            className="text-4xl md:text-8xl font-serif text-on-surface leading-tight mb-6 md:mb-8"
           >
             VIGIA: <span className="italic font-normal">El Legado</span> que se Lleva en la Muñeca
           </motion.h1>
@@ -256,7 +262,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
         <div className="order-2 lg:order-1">
           <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 md:mb-6 block">El Manifiesto</span>
-          <h2 className="text-2xl md:text-6xl font-serif text-on-surface leading-tight mb-6 md:mb-8">
+          <h2 className="text-3xl md:text-6xl font-serif text-on-surface leading-tight mb-6 md:mb-8">
             Creamos relojes con significado. No para mostrar quién eres, sino para recordar lo que importa.
           </h2>
           <div className="w-16 md:w-20 h-[1px] bg-primary mb-6 md:mb-8" />
@@ -267,7 +273,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
         <div className="relative order-1 lg:order-2">
           <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1200" 
+              src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" 
               alt="Craftsmanship" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
@@ -286,7 +292,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="bg-surface-low p-6 md:p-12 rounded-3xl border border-white/5 shadow-inner">
             <img 
-              src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=1000" 
+              src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp" 
               alt="Modelo Carajo" 
               className="w-full h-auto rounded-xl shadow-2xl"
               referrerPolicy="no-referrer"
@@ -294,7 +300,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
           </div>
           <div>
             <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 md:mb-6 block">Colección Principal</span>
-            <h2 className="text-3xl md:text-7xl font-serif text-on-surface mb-8 md:mb-12">Modelo Carajo</h2>
+            <h2 className="text-4xl md:text-7xl font-serif text-on-surface mb-8 md:mb-12">Modelo Carajo</h2>
             
             <div className="grid grid-cols-2 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-8 mb-10 md:mb-16">
               <div>
@@ -328,7 +334,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
 
       {/* Process Steps */}
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto text-center">
-        <h2 className="text-2xl md:text-5xl font-serif italic mb-12 md:mb-20">Hazlo personal. <span className="text-primary font-normal not-italic">Hazlo permanente.</span></h2>
+        <h2 className="text-3xl md:text-5xl font-serif italic mb-12 md:mb-20">Hazlo personal. <span className="text-primary font-normal not-italic">Hazlo permanente.</span></h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
           <div className="flex flex-col items-center">
@@ -359,31 +365,31 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-screen-2xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 h-auto md:h-[800px]">
           <div className="md:col-span-1 relative group overflow-hidden rounded-2xl">
-            <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=800" alt="Parejas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+            <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp" alt="Parejas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Para Parejas</span>
             </div>
           </div>
           <div className="md:col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl">
-            <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800" alt="Hijos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+            <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" alt="Hijos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">De Padres a Hijos</span>
             </div>
           </div>
           <div className="md:col-span-2 relative group overflow-hidden rounded-2xl">
-            <img src="https://images.unsplash.com/photo-1495364141860-b0d03eccd065?auto=format&fit=crop&q=80&w=1200" alt="Hitos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+            <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp" alt="Hitos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Hitos Personales</span>
             </div>
           </div>
           <div className="md:col-span-1 relative group overflow-hidden rounded-2xl">
-            <img src="https://images.unsplash.com/photo-1539533331302-7eb39159f5d8?auto=format&fit=crop&q=80&w=800" alt="Fechas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+            <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp" alt="Fechas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Fechas Eternas</span>
             </div>
           </div>
           <div className="md:col-span-2 relative group overflow-hidden rounded-2xl">
-            <img src="https://images.unsplash.com/photo-1549463591-14cc58e15c3e?auto=format&fit=crop&q=80&w=1200" alt="Regalo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+            <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" alt="Regalo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">El Regalo Perfecto</span>
             </div>
@@ -427,67 +433,67 @@ const CollectionPage = ({ key }: { key?: string }) => {
     >
       <header className="mb-12 md:mb-20">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 block">Colección Actual</span>
-        <h1 className="text-4xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Monolitos</h1>
+        <h1 className="text-5xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Monolitos</h1>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-32">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12 mb-16 md:mb-32">
         {/* Product 1 */}
-        <div className="group bg-surface-low rounded-3xl p-6 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
-          <div className="flex justify-between items-start mb-8 md:mb-12">
+        <div className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
+          <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[10px] font-serif tracking-widest text-primary mb-2 block uppercase">01 / Dark</span>
-              <h2 className="text-2xl md:text-4xl font-serif text-on-surface mb-2">VIGIA 01</h2>
-              <p className="text-secondary text-[10px] tracking-widest uppercase">Obsidian Black</p>
+              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">01 / Dark</span>
+              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">VIGIA 01</h2>
+              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">Obsidian Black</p>
             </div>
           </div>
-          <div className="aspect-square rounded-2xl overflow-hidden mb-8 md:mb-12 shadow-2xl">
+          <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1000" 
+              src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp" 
               alt="Vigia 01 Black" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               referrerPolicy="no-referrer"
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex gap-3 md:gap-4">
-              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-black border border-white/20 ring-2 ring-primary ring-offset-4 ring-offset-surface-low" />
-              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-stone-200 border border-white/20" />
+            <div className="flex gap-2 md:gap-4">
+              <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-black border border-white/20 ring-2 ring-primary ring-offset-2 md:ring-offset-4 ring-offset-surface-low" />
+              <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-stone-200 border border-white/20" />
             </div>
-            <button className="flex items-center gap-3 md:gap-4 group/btn">
-              <span className="font-serif tracking-[0.2em] uppercase text-[9px] md:text-[10px] text-on-surface group-hover/btn:text-primary transition-colors">Ver Producto</span>
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/10 flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:border-primary transition-all">
-                <ArrowRight size={12} className="group-hover/btn:text-on-primary" />
+            <button className="flex items-center gap-2 md:gap-4 group/btn">
+              <span className="hidden md:block font-serif tracking-[0.2em] uppercase text-[9px] md:text-[10px] text-on-surface group-hover/btn:text-primary transition-colors">Ver Producto</span>
+              <div className="w-6 h-6 md:w-10 md:h-10 rounded-full border border-white/10 flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:border-primary transition-all">
+                <ArrowRight size={10} className="group-hover/btn:text-on-primary" />
               </div>
             </button>
           </div>
         </div>
 
         {/* Product 2 */}
-        <div className="group bg-surface-low rounded-3xl p-6 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
-          <div className="flex justify-between items-start mb-8 md:mb-12">
+        <div className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
+          <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[10px] font-serif tracking-widest text-primary mb-2 block uppercase">02 / Light</span>
-              <h2 className="text-2xl md:text-4xl font-serif text-on-surface mb-2">VIGIA 01</h2>
-              <p className="text-secondary text-[10px] tracking-widest uppercase">Broken White</p>
+              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">02 / Light</span>
+              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">VIGIA 01</h2>
+              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">Broken White</p>
             </div>
           </div>
-          <div className="aspect-square rounded-2xl overflow-hidden mb-8 md:mb-12 shadow-2xl">
+          <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1508685096489-7aac291ba597?auto=format&fit=crop&q=80&w=1000" 
+              src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp" 
               alt="Vigia 01 White" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               referrerPolicy="no-referrer"
             />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex gap-3 md:gap-4">
-              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-black border border-white/20" />
-              <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-stone-200 border border-white/20 ring-2 ring-primary ring-offset-4 ring-offset-surface-low" />
+            <div className="flex gap-2 md:gap-4">
+              <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-black border border-white/20" />
+              <div className="w-3 h-3 md:w-6 md:h-6 rounded-full bg-stone-200 border border-white/20 ring-2 ring-primary ring-offset-2 md:ring-offset-4 ring-offset-surface-low" />
             </div>
-            <button className="flex items-center gap-3 md:gap-4 group/btn">
-              <span className="font-serif tracking-[0.2em] uppercase text-[9px] md:text-[10px] text-on-surface group-hover/btn:text-primary transition-colors">Ver Producto</span>
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/10 flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:border-primary transition-all">
-                <ArrowRight size={12} className="group-hover/btn:text-on-primary" />
+            <button className="flex items-center gap-2 md:gap-4 group/btn">
+              <span className="hidden md:block font-serif tracking-[0.2em] uppercase text-[9px] md:text-[10px] text-on-surface group-hover/btn:text-primary transition-colors">Ver Producto</span>
+              <div className="w-6 h-6 md:w-10 md:h-10 rounded-full border border-white/10 flex items-center justify-center group-hover/btn:bg-primary group-hover/btn:border-primary transition-all">
+                <ArrowRight size={10} className="group-hover/btn:text-on-primary" />
               </div>
             </button>
           </div>
@@ -509,10 +515,7 @@ const CollectionPage = ({ key }: { key?: string }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: <Lock />, title: "VIGIA 02" },
-            { icon: <Sparkles />, title: "VIGIA CHRONO" },
-            { icon: <Hourglass />, title: "VIGIA NOIR" },
-            { icon: <PenTool />, title: "EDICIÓN ESPECIAL" }
+            { icon: <Lock />, title: "VIGIA 02" }
           ].map((item, i) => (
             <div key={i} className="aspect-[3/4] bg-surface-lowest rounded-2xl p-8 flex flex-col items-center justify-center text-center border border-white/5 group hover:border-primary/30 transition-all">
               <div className="text-primary/40 mb-6 group-hover:scale-110 transition-transform duration-500">
@@ -529,7 +532,7 @@ const CollectionPage = ({ key }: { key?: string }) => {
 };
 
 const PersonalizePage = ({ key }: { key?: string }) => {
-  const [engravingText, setEngravingText] = useState('PRIMERA EDICIÓN DE VIGIA');
+  const [engravingText, setEngravingText] = useState('');
   
   const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
 
@@ -539,12 +542,12 @@ const PersonalizePage = ({ key }: { key?: string }) => {
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0 }}
-      className="pt-16 md:pt-40 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col"
+      className="pt-24 md:pt-40 pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col"
     >
       {/* Global Header Section */}
       <div className="mb-12 md:mb-20 space-y-4 md:space-y-6 text-center md:text-left">
         <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block">GRABADO ARTESANAL</span>
-        <h1 className="font-serif text-3xl md:text-7xl text-on-surface leading-[1.1] max-w-4xl">
+        <h1 className="font-serif text-4xl md:text-7xl text-on-surface leading-[1.1] max-w-4xl">
           Escribe lo que quieres llevar contigo.
         </h1>
       </div>
@@ -590,7 +593,7 @@ const PersonalizePage = ({ key }: { key?: string }) => {
                 <input 
                   className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-habibi tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 uppercase" 
                   maxLength={20} 
-                  placeholder="EJ. PARA SIEMPRE" 
+                  placeholder="Escribe aquí" 
                   type="text"
                   value={engravingText}
                   onChange={(e) => setEngravingText(e.target.value.toUpperCase())}
@@ -651,9 +654,9 @@ const AboutPage = ({ key }: { key?: string }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col"
     >
-      <section className="pt-16 md:pt-48 pb-16 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto">
+      <section className="pt-24 md:pt-48 pb-16 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-6 md:mb-8 block">Nuestra Filosofía</span>
-        <h1 className="text-3xl md:text-8xl font-serif text-on-surface leading-tight mb-8 md:mb-12">
+        <h1 className="text-4xl md:text-8xl font-serif text-on-surface leading-tight mb-8 md:mb-12">
           No creemos en el lujo como estatus. Creemos en <span className="italic font-normal">objetos</span> que guardan significado.
         </h1>
         <div className="w-20 md:w-32 h-[1px] bg-primary" />
@@ -663,7 +666,7 @@ const AboutPage = ({ key }: { key?: string }) => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1585123334904-845d60e97b29?auto=format&fit=crop&q=80&w=1000" 
+              src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" 
               alt="Watch Internal" 
               className="w-full h-auto rounded-3xl shadow-2xl"
               referrerPolicy="no-referrer"
@@ -685,7 +688,7 @@ const AboutPage = ({ key }: { key?: string }) => {
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20 gap-6 md:gap-8">
           <div>
             <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 md:mb-6 block">Nuestros Valores</span>
-            <h2 className="text-2xl md:text-5xl font-serif text-on-surface">La herencia de lo esencial.</h2>
+            <h2 className="text-3xl md:text-5xl font-serif text-on-surface">La herencia de lo esencial.</h2>
           </div>
           <p className="text-secondary italic font-serif text-sm md:text-base">"Hecho para durar más que el tiempo."</p>
         </div>
@@ -710,7 +713,7 @@ const AboutPage = ({ key }: { key?: string }) => {
 
       <section className="py-24 md:py-48 text-center px-6">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-6 md:mb-8 block">Propósito Vital</span>
-        <h2 className="text-3xl md:text-8xl font-serif text-on-surface mb-12 md:mb-16 max-w-5xl mx-auto">
+        <h2 className="text-4xl md:text-8xl font-serif text-on-surface mb-12 md:mb-16 max-w-5xl mx-auto">
           Crear objetos que duren más que el tiempo.
         </h2>
         <button className="border border-outline text-on-surface px-10 md:px-12 py-4 md:py-5 rounded-full font-serif tracking-[0.3em] uppercase text-[10px] md:text-xs hover:bg-white/5 transition-all">
@@ -748,16 +751,16 @@ export default function App() {
       {/* Mobile Bottom Nav */}
       <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-full flex gap-8 shadow-2xl items-center">
         <button onClick={() => setPage('home')} className={`${page === 'home' ? 'text-primary' : 'text-secondary'}`}>
-          <Menu size={20} />
+          <Home size={20} />
         </button>
         <button onClick={() => setPage('personalize')} className={`${page === 'personalize' ? 'text-primary' : 'text-secondary'}`}>
-          <PenTool size={20} />
+          <Palette size={20} />
         </button>
         <button onClick={() => setPage('collection')} className={`${page === 'collection' ? 'text-primary' : 'text-secondary'}`}>
-          <Clock size={20} />
+          <Watch size={20} />
         </button>
-        <button onClick={() => setPage('about')} className={`${page === 'about' ? 'text-primary' : 'text-secondary'}`}>
-          <ChevronRight size={20} />
+        <button onClick={() => setPage('about')} className={`${page === 'about' ? 'text-primary' : 'text-secondary'} flex items-center justify-center`}>
+          <span className="font-habibi text-xl leading-none">V</span>
         </button>
       </div>
     </div>
