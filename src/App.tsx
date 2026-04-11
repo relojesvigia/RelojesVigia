@@ -53,8 +53,10 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-4 flex justify-between items-center ${isScrolled ? 'bg-stone-950/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
+      <div className="md:hidden w-8" /> {/* Spacer for mobile centering */}
+      
       <div 
-        className="font-serif text-2xl tracking-[0.3em] text-on-surface cursor-pointer" 
+        className="font-serif text-2xl tracking-[0.3em] text-on-surface cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0" 
         onClick={() => setPage('home')}
       >
         VIGIA
@@ -749,7 +751,7 @@ export default function App() {
       <Footer />
 
       {/* Mobile Bottom Nav */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-full flex gap-8 shadow-2xl items-center">
+      <div className="hidden min-[390px]:flex md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-full gap-8 shadow-2xl items-center">
         <button onClick={() => setPage('home')} className={`${page === 'home' ? 'text-primary' : 'text-secondary'}`}>
           <Home size={20} />
         </button>
