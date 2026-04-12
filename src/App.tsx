@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { createCheckout, getLiveVariantInfo } from './lib/shopify';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowRight, 
@@ -35,6 +36,7 @@ type Page = 'home' | 'collection' | 'about' | 'personalize' | 'product-detail';
 
 interface ProductVariant {
   color: 'NEGRO' | 'BLANCO';
+  shopifyId?: string;
   images: string[];
 }
 
@@ -55,6 +57,7 @@ const PRODUCTS: Product[] = [
     variants: [
       {
         color: 'NEGRO',
+        shopifyId: 'gid://shopify/ProductVariant/50679276503287',
         images: [
           'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp',
           'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1000',
@@ -66,6 +69,7 @@ const PRODUCTS: Product[] = [
       },
       {
         color: 'BLANCO',
+        shopifyId: 'gid://shopify/ProductVariant/50679276536055',
         images: [
           'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp',
           'https://images.unsplash.com/photo-1508685096489-7aac291ba597?auto=format&fit=crop&q=80&w=1000',
@@ -127,7 +131,10 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="hidden sm:block bg-primary text-on-primary px-8 py-2.5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] transition-all hover:scale-105 hover:shadow-glow">
+        <button 
+          onClick={() => setPage('collection')} 
+          className="hidden sm:block bg-primary text-on-primary px-8 py-2.5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] transition-all hover:scale-105 hover:shadow-glow"
+        >
           COMPRA AHORA
         </button>
         <button 
@@ -161,7 +168,10 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
                 {link.label}
               </button>
             ))}
-            <button className="bg-primary text-on-primary px-8 py-4 rounded-full font-serif tracking-[0.2em] uppercase text-xs w-full">
+            <button 
+              onClick={() => { setPage('collection'); setIsMobileMenuOpen(false); }} 
+              className="bg-primary text-on-primary px-8 py-4 rounded-full font-serif tracking-[0.2em] uppercase text-xs w-full"
+            >
               COMPRA AHORA
             </button>
           </motion.div>
@@ -599,11 +609,35 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
   const currentVariant = product.variants.find(v => v.color === selectedColor) || product.variants[0];
   const [mainImage, setMainImage] = useState(currentVariant.images[0]);
   const [engravingText, setEngravingText] = useState('');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [livePrice, setLivePrice] = useState<string | null>(null);
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
+
+  const handleCheckout = async () => {
+    try {
+      setIsCheckingOut(true);
+      const url = await createCheckout(currentVariant.shopifyId as string, engravingText);
+      window.location.href = url;
+    } catch (e: any) {
+      console.error(e);
+      alert(e.message || "Error al procesar el pago. Por favor intenta de nuevo.");
+      setIsCheckingOut(false);
+    }
+  };
 
   useEffect(() => {
     setMainImage(currentVariant.images[0]);
-  }, [selectedColor]);
+    if (currentVariant.shopifyId) {
+      getLiveVariantInfo(currentVariant.shopifyId).then((info) => {
+        if (info && info.price) {
+          const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: info.price.currencyCode });
+          setLivePrice(formatter.format(info.price.amount));
+          setIsAvailable(info.availableForSale);
+        }
+      });
+    }
+  }, [selectedColor, currentVariant.shopifyId]);
 
   return (
     <motion.div 
@@ -675,12 +709,14 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
             <div className="p-8 bg-surface-low rounded-2xl border border-white/5 space-y-8 mt-0">
               <div className="flex justify-between items-end">
                 <div>
-                  <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio (MXN)</span>
-                  <span className="text-4xl font-serif text-on-surface">{product.price}</span>
+                  <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio</span>
+                  <span className="text-4xl font-serif text-on-surface">{livePrice || product.price}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] tracking-[0.2em] uppercase text-primary block mb-1">En Stock</span>
-                  <span className="text-xs text-secondary">Entrega de Atelier</span>
+                  <span className={`text-[10px] tracking-[0.2em] uppercase block mb-1 ${isAvailable ? 'text-primary' : 'text-red-500'}`}>
+                    {isAvailable ? 'En Stock' : 'Agotado'}
+                  </span>
+                  <span className="text-xs text-secondary">{isAvailable ? 'Entrega de Atelier' : 'No disponible'}</span>
                 </div>
               </div>
 
@@ -734,8 +770,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
               </div>
 
               <div className="flex flex-col gap-4">
-                <button className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow">
-                  Comprar Ahora
+                <button 
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut || !isAvailable}
+                  className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCheckingOut ? 'PROCESANDO...' : (isAvailable ? 'Comprar Ahora' : 'AGOTADO')}
                 </button>
                 <button className="w-full py-5 border border-outline text-on-surface rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 active:scale-[0.98]">
                   CONTACTAR A UN ASESOR
@@ -794,7 +834,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
   );
 };
 
-const PersonalizePage = ({ key }: { key?: string }) => {
+const PersonalizePage = ({ setPage, key }: { setPage: (p: Page) => void, key?: string }) => {
   const [engravingText, setEngravingText] = useState('');
   
   const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
@@ -885,7 +925,10 @@ const PersonalizePage = ({ key }: { key?: string }) => {
           </div>
 
           <div className="pt-4 flex flex-col gap-12">
-            <button className="w-full md:w-80 bg-primary text-on-primary py-5 rounded-full font-bold tracking-[0.2em] hover:brightness-110 transition-all uppercase text-xs shadow-glow">
+            <button 
+              onClick={() => setPage('product-detail')}
+              className="w-full md:w-80 bg-primary text-on-primary py-5 rounded-full font-bold tracking-[0.2em] hover:brightness-110 transition-all uppercase text-xs shadow-glow"
+            >
               CONTINUAR A COMPRA
             </button>
 
@@ -1006,7 +1049,7 @@ export default function App() {
           {page === 'home' && <HomePage key="home" setPage={setPage} />}
           {page === 'collection' && <CollectionPage key="collection" setPage={setPage} setSelectedVariant={setSelectedVariant} />}
           {page === 'about' && <AboutPage key="about" />}
-          {page === 'personalize' && <PersonalizePage key="personalize" />}
+          {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} />}
           {page === 'product-detail' && <ProductDetailPage key="product-detail" productId="carajo" initialVariant={selectedVariant} setPage={setPage} />}
         </AnimatePresence>
       </main>
