@@ -253,7 +253,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-serif text-primary tracking-[0.4em] uppercase text-[10px] md:text-xs mb-4 md:mb-6 block"
+            className="font-serif text-primary tracking-[0.4em] uppercase text-[10px] md:text-xs mb-2 md:mb-6 block"
           >
             Horología de Precisión
           </motion.span>
@@ -261,7 +261,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-4xl md:text-8xl font-serif text-on-surface leading-tight mb-6 md:mb-8"
+            className="text-4xl md:text-8xl font-serif text-on-surface leading-tight mb-4 md:mb-8"
           >
             VIGIA: <span className="italic font-normal">El Legado</span> que se Lleva en la Muñeca
           </motion.h1>
@@ -277,7 +277,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6"
           >
             <button 
               onClick={() => setPage('collection')}
@@ -285,7 +285,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             >
               COMPRAR AHORA
             </button>
-            <button className="border border-outline text-on-surface px-8 md:px-10 py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 w-full sm:w-auto">
+            <button className="border border-outline/30 sm:border-outline text-on-surface px-4 sm:px-8 md:px-10 py-2 sm:py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[8px] sm:text-[10px] md:text-xs transition-all hover:bg-white/5 w-auto sm:w-auto opacity-80 sm:opacity-100">
               CONTACTAR A UN ASESOR
             </button>
           </motion.div>
