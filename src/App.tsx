@@ -25,12 +25,59 @@ import {
   MapPin,
   Home,
   Palette,
-  Watch
+  Watch,
+  Truck
 } from 'lucide-react';
 
 // --- Types ---
 
-type Page = 'home' | 'collection' | 'about' | 'personalize';
+type Page = 'home' | 'collection' | 'about' | 'personalize' | 'product-detail';
+
+interface ProductVariant {
+  color: 'NEGRO' | 'BLANCO';
+  images: string[];
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  variants: ProductVariant[];
+}
+
+const PRODUCTS: Product[] = [
+  {
+    id: 'carajo',
+    name: 'Modelo Carajo',
+    description: 'El “carajo” era originalmente una parte del barco: una pequeña canastilla en lo alto del mástil donde se colocaba el vigía. Desde ahí, su función era observar el horizonte, detectar peligros, anunciar tierra o anticipar tormentas. Era un punto solitario, expuesto al viento y al mar, reservado para quien tenía la responsabilidad de ver más allá que los demás.',
+    price: '$2,450.00',
+    variants: [
+      {
+        color: 'NEGRO',
+        images: [
+          'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp',
+          'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1000',
+          'https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1200',
+          'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=1000',
+          'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800'
+        ]
+      },
+      {
+        color: 'BLANCO',
+        images: [
+          'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp',
+          'https://images.unsplash.com/photo-1508685096489-7aac291ba597?auto=format&fit=crop&q=80&w=1000',
+          'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp',
+          'https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp',
+          'https://images.unsplash.com/photo-1539533331302-7eb39159f5d8?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1549463591-14cc58e15c3e?auto=format&fit=crop&q=80&w=1200'
+        ]
+      }
+    ]
+  }
+];
 
 // --- Components ---
 
@@ -52,7 +99,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-4 flex justify-between items-center ${isScrolled ? 'bg-stone-950/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-4 flex justify-between items-center ${isScrolled || currentPage === 'product-detail' ? 'bg-stone-950/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
       <div className="md:hidden w-8" /> {/* Spacer for mobile centering */}
       
       <div 
@@ -168,7 +215,7 @@ const Footer = () => (
           </a>
         </div>
         <div className="text-[10px] tracking-[0.2em] uppercase text-outline">
-          © 2024 VIGIA MONOLITH. HECHO EN MÉXICO.
+          © 2026 VIGIA. HECHO EN MÉXICO.
         </div>
       </div>
     </div>
@@ -244,18 +291,19 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
           </motion.div>
         </div>
 
-        <div className="absolute bottom-8 md:bottom-12 left-0 w-full flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-12 px-6">
-          <div className="flex items-center gap-3 whitespace-nowrap">
-            <Shield size={14} className="text-primary" />
-            <span className="text-[10px] tracking-[0.2em] uppercase text-secondary">Garantía de 24 meses</span>
-          </div>
-          <div className="flex items-center gap-3 whitespace-nowrap">
-            <UserCheck size={14} className="text-primary" />
-            <span className="text-[10px] tracking-[0.2em] uppercase text-secondary">Trato Personal</span>
-          </div>
-          <div className="flex items-center gap-3 whitespace-nowrap">
-            <MapPin size={14} className="text-primary" />
-            <span className="text-[10px] tracking-[0.2em] uppercase text-secondary">Hecho en México</span>
+        <div className="absolute bottom-6 md:bottom-12 left-0 w-full px-6">
+          <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-y-4 gap-x-4 md:gap-12 max-w-3xl mx-auto">
+            {[
+              { icon: <Shield size={14} />, text: "Garantía de 24 meses" },
+              { icon: <Shield size={14} />, text: "Pagos seguros" },
+              { icon: <MapPin size={14} />, text: "Hecho en México" },
+              { icon: <UserCheck size={14} />, text: "Trato Personal" },
+            ].map((badge, i) => (
+              <div key={i} className="flex items-center gap-2 md:gap-3 whitespace-nowrap justify-center">
+                <span className="text-primary">{badge.icon}</span>
+                <span className="text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-secondary">{badge.text}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -424,7 +472,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
   );
 };
 
-const CollectionPage = ({ key }: { key?: string }) => {
+const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) => void, setSelectedVariant: (v: 'NEGRO' | 'BLANCO') => void, key?: string }) => {
   return (
     <motion.div 
       key="collection-content"
@@ -440,12 +488,18 @@ const CollectionPage = ({ key }: { key?: string }) => {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12 mb-16 md:mb-32">
         {/* Product 1 */}
-        <div className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
+        <div 
+          onClick={() => {
+            setSelectedVariant('NEGRO');
+            setPage('product-detail');
+          }}
+          className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
+        >
           <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">01 / Dark</span>
-              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">VIGIA 01</h2>
-              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">Obsidian Black</p>
+              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
+              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">Modelo Carajo</h2>
+              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">NEGRO</p>
             </div>
           </div>
           <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
@@ -471,12 +525,18 @@ const CollectionPage = ({ key }: { key?: string }) => {
         </div>
 
         {/* Product 2 */}
-        <div className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5">
+        <div 
+          onClick={() => {
+            setSelectedVariant('BLANCO');
+            setPage('product-detail');
+          }}
+          className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
+        >
           <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">02 / Light</span>
-              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">VIGIA 01</h2>
-              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">Broken White</p>
+              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
+              <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">Modelo Carajo</h2>
+              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">BLANCO</p>
             </div>
           </div>
           <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
@@ -525,6 +585,207 @@ const CollectionPage = ({ key }: { key?: string }) => {
               </div>
               <p className="font-serif tracking-[0.2em] uppercase text-[10px] text-outline mb-2">Coming soon</p>
               <h4 className="font-serif text-on-surface/30 text-xl">{item.title}</h4>
+            </div>
+          ))}
+        </div>
+      </section>
+    </motion.div>
+  );
+};
+
+const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { productId: string, initialVariant: 'NEGRO' | 'BLANCO', setPage: (p: Page) => void, key?: string }) => {
+  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
+  const [selectedColor, setSelectedColor] = useState<'NEGRO' | 'BLANCO'>(initialVariant);
+  const currentVariant = product.variants.find(v => v.color === selectedColor) || product.variants[0];
+  const [mainImage, setMainImage] = useState(currentVariant.images[0]);
+  const [engravingText, setEngravingText] = useState('');
+  const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
+
+  useEffect(() => {
+    setMainImage(currentVariant.images[0]);
+  }, [selectedColor]);
+
+  return (
+    <motion.div 
+      key="product-detail-content"
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="pt-24 md:pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto"
+    >
+      <div className="mb-4 md:mb-8">
+        <button 
+          onClick={() => setPage('collection')} 
+          className="flex items-center gap-2 font-serif tracking-widest uppercase text-[10px] text-primary hover:text-on-surface transition-colors"
+        >
+          <ArrowRight size={12} className="rotate-180" />
+          Regresar a la colección
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-16 mb-24 md:mb-32">
+        {/* Product Info (Mobile First) */}
+        <div className="lg:hidden space-y-2">
+          <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-semibold">Primera Edición de Vigía</span>
+          <h1 className="text-5xl font-serif tracking-tighter text-on-surface uppercase">{product.name}</h1>
+          <p className="text-secondary font-light leading-relaxed text-sm">
+            {product.description}
+          </p>
+        </div>
+
+        {/* Left: Gallery */}
+        <div className="lg:col-span-7 flex flex-col gap-4 md:gap-6">
+          <div className="aspect-[4/5] bg-surface-low rounded-2xl overflow-hidden shadow-2xl relative">
+            <motion.img 
+              key={mainImage}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              src={mainImage} 
+              alt={product.name} 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface/40 to-transparent"></div>
+          </div>
+          
+          <div className="grid grid-cols-6 gap-2 md:gap-4">
+            {currentVariant.images.map((img, idx) => (
+              <div 
+                key={idx}
+                onClick={() => setMainImage(img)}
+                className={`aspect-square bg-surface-low rounded-lg overflow-hidden border cursor-pointer transition-all ${mainImage === img ? 'border-primary' : 'border-white/5 hover:border-white/20'}`}
+              >
+                <img src={img} alt={`Vista ${idx + 1}`} className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: Details */}
+        <div className="lg:col-span-5 flex flex-col justify-start">
+          <div className="sticky top-40 space-y-10 md:space-y-12">
+            <div className="hidden lg:block space-y-4">
+              <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-semibold">Primera Edición de Vigía</span>
+              <h1 className="text-5xl md:text-8xl font-serif tracking-tighter text-on-surface uppercase">{product.name}</h1>
+              <p className="text-secondary font-light leading-relaxed max-w-md">
+                {product.description}
+              </p>
+            </div>
+
+            <div className="p-8 bg-surface-low rounded-2xl border border-white/5 space-y-8 mt-0">
+              <div className="flex justify-between items-end">
+                <div>
+                  <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio (MXN)</span>
+                  <span className="text-4xl font-serif text-on-surface">{product.price}</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] tracking-[0.2em] uppercase text-primary block mb-1">En Stock</span>
+                  <span className="text-xs text-secondary">Entrega de Atelier</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center space-y-4">
+                <label className="text-[10px] tracking-[0.2em] uppercase text-outline">COLORES</label>
+                <div className="flex gap-4 items-center">
+                  <button 
+                    onClick={() => setSelectedColor('NEGRO')}
+                    className={`w-6 h-6 rounded-full bg-black border-2 transition-all ${selectedColor === 'NEGRO' ? 'border-primary ring-2 ring-primary/20 ring-offset-4 ring-offset-surface-low' : 'border-white/10 hover:border-white/30'}`}
+                  />
+                  <button 
+                    onClick={() => setSelectedColor('BLANCO')}
+                    className={`w-6 h-6 rounded-full bg-stone-200 border-2 transition-all ${selectedColor === 'BLANCO' ? 'border-primary ring-2 ring-primary/20 ring-offset-4 ring-offset-surface-low' : 'border-white/10 hover:border-white/30'}`}
+                  />
+                </div>
+              </div>
+
+              {/* Personalization UI */}
+              <div className="space-y-8 pt-0">
+                <div className="space-y-4 text-center">
+                  <label className="text-outline text-[10px] tracking-[0.2em] uppercase font-medium">Grabado laser personalizado</label>
+                  <div className="relative group">
+                    <input 
+                      className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-habibi tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 placeholder:text-xs uppercase text-center" 
+                      maxLength={20} 
+                      placeholder="Escribe aquí" 
+                      type="text"
+                      value={engravingText}
+                      onChange={(e) => setEngravingText(e.target.value.toUpperCase())}
+                    />
+                    <div className="absolute right-0 bottom-4 font-serif text-[10px] tracking-[0.2em] text-outline">
+                      <span>{engravingText.length}</span> / 20
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 text-center">
+                  <span className="text-outline text-[10px] tracking-[0.2em] uppercase block">SUGERENCIAS</span>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {suggestions.map((text) => (
+                      <button 
+                        key={text}
+                        className="px-4 py-1.5 rounded-full border border-white/10 bg-surface-low/30 text-secondary text-[9px] tracking-[0.15em] uppercase hover:border-primary/50 hover:text-primary transition-all duration-300"
+                        onClick={() => setEngravingText(text)}
+                      >
+                        {text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <button className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow">
+                  Comprar Ahora
+                </button>
+                <button className="w-full py-5 border border-outline text-on-surface rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 active:scale-[0.98]">
+                  CONTACTAR A UN ASESOR
+                </button>
+              </div>
+            </div>
+
+            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-6 gap-x-4">
+              {[
+                { icon: <Shield size={14} />, text: "Garantía de 24 meses" },
+                { icon: <UserCheck size={14} />, text: "Trato Personal" },
+                { icon: <MapPin size={14} />, text: "Hecho en México" },
+                { icon: <Truck size={14} />, text: "Envíos a toda la república" },
+              ].map((badge, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="text-primary shrink-0">{badge.icon}</span>
+                  <span className="text-[9px] tracking-[0.1em] uppercase text-secondary leading-tight">{badge.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Technical Specifications */}
+      <section className="mt-24 md:mt-40">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16 gap-8">
+          <div className="max-w-2xl">
+            <h2 className="text-4xl font-serif italic text-on-surface mb-6">Arquitectura Técnica</h2>
+            <div className="h-1 w-24 bg-primary mb-6"></div>
+            <p className="text-secondary font-light leading-relaxed">Ingeniería de precisión para superar los estándares de la alta relojería. Cada componente del VIGIA es seleccionado por su longevidad y equilibrio estético.</p>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] tracking-[0.5em] uppercase text-outline">Hoja de Especificaciones Rev. 02.24</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 border border-white/5 overflow-hidden rounded-2xl">
+          {[
+            { label: "Calibración", title: "Movimiento", text: "Automático Jap (Calibre V-12) con parada de segundero y 24 joyas con carga bidireccional." },
+            { label: "Chasis", title: "Material", text: "Acero inoxidable 316L de alta calidad con revestimiento de PVD de obsidiana doble cepillado." },
+            { label: "Óptica", title: "Cristal", text: "Cristal de zafiro resistente a los arañazos con 5 capas de revestimiento antirreflectante interno." },
+            { label: "Resistencia", title: "Resistencia al Agua", text: "Probado a 5 ATM (50 Metros / 165 Pies). Adecuado para períodos cortos de natación recreativa." },
+            { label: "Geometría", title: "Diámetro de Caja", text: "Ancho de caja de 42.0mm. Grosor de 12.8mm. 48.5mm de asa a asa para presencia y comodidad." },
+            { label: "Autonomía", title: "Reserva de Marcha", text: "Aprox. 41 horas con carga completa. Sistema de cuerda automática alimentado por el movimiento natural." }
+          ].map((spec, i) => (
+            <div key={i} className="bg-surface-low p-8 md:p-10 space-y-4">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-primary">{spec.label}</span>
+              <h3 className="text-xl font-serif text-on-surface">{spec.title}</h3>
+              <p className="text-secondary text-sm font-light leading-relaxed">{spec.text}</p>
             </div>
           ))}
         </div>
@@ -730,6 +991,7 @@ const AboutPage = ({ key }: { key?: string }) => {
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
+  const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -742,9 +1004,10 @@ export default function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           {page === 'home' && <HomePage key="home" setPage={setPage} />}
-          {page === 'collection' && <CollectionPage key="collection" />}
+          {page === 'collection' && <CollectionPage key="collection" setPage={setPage} setSelectedVariant={setSelectedVariant} />}
           {page === 'about' && <AboutPage key="about" />}
           {page === 'personalize' && <PersonalizePage key="personalize" />}
+          {page === 'product-detail' && <ProductDetailPage key="product-detail" productId="carajo" initialVariant={selectedVariant} setPage={setPage} />}
         </AnimatePresence>
       </main>
 
