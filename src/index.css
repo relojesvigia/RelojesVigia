@@ -24,7 +24,7 @@
 }
 
 .engraving-text {
-  font-family: var(--font-habibi);
+  font-family: var(--font-serif);
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }

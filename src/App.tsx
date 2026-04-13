@@ -35,7 +35,7 @@ import {
 
 // --- Types ---
 
-type Page = 'home' | 'collection' | 'about' | 'personalize' | 'product-detail' | 'faq' | 'terms' | 'warranty';
+type Page = 'home' | 'collection' | 'about' | 'personalize' | 'modelo-carajo' | 'faq' | 'terms' | 'warranty';
 
 interface ProductVariant {
   color: 'NEGRO' | 'BLANCO';
@@ -106,11 +106,11 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-4 flex justify-between items-center ${isScrolled || currentPage === 'product-detail' ? 'bg-stone-950/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-4 flex justify-between items-center ${isScrolled || currentPage === 'modelo-carajo' ? 'bg-stone-950/90 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
       <div className="md:hidden w-8" /> {/* Spacer for mobile centering */}
       
       <div 
-        className="font-serif text-2xl tracking-[0.3em] text-on-surface cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0" 
+        className="font-habibi text-3xl tracking-[0.2em] text-on-surface cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0" 
         onClick={() => setPage('home')}
       >
         VIGIA
@@ -188,7 +188,7 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
   <footer className="w-full py-20 px-6 md:px-12 border-t border-white/5 bg-stone-950">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
       <div className="flex flex-col gap-4">
-        <span className="font-serif text-on-surface tracking-[0.3em] text-2xl">VIGIA</span>
+        <span className="font-habibi text-on-surface tracking-[0.2em] text-3xl">VIGIA</span>
         <p className="font-sans tracking-[0.15em] text-[10px] uppercase text-secondary max-w-xs leading-relaxed">
           Hecho para durar más que el tiempo. Cada pieza es un manifiesto de permanencia.
         </p>
@@ -210,7 +210,7 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Soporte</span>
           <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Contacto</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">WhatsApp</a>
+          <a href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">WhatsApp</a>
           <button onClick={() => setPage('faq')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">FAQ</button>
         </div>
       </div>
@@ -221,10 +221,10 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
             <Instagram size={18} />
           </a>
           <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
-            <Twitter size={18} />
-          </a>
-          <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
             <Facebook size={18} />
+          </a>
+          <a href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
+            <svg fill="currentColor" viewBox="0 0 24 24" width="18" height="18" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
         </div>
         <div className="text-[10px] tracking-[0.2em] uppercase text-outline">
@@ -298,9 +298,15 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             >
               COMPRAR AHORA
             </button>
-            <button className="border border-outline/30 sm:border-outline text-on-surface px-4 sm:px-8 md:px-10 py-2 sm:py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[8px] sm:text-[10px] md:text-xs transition-all hover:bg-white/5 w-auto sm:w-auto opacity-80 sm:opacity-100">
-              CONTACTAR A UN ASESOR
-            </button>
+            <a 
+              href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="border border-outline/30 sm:border-outline text-on-surface px-4 sm:px-8 md:px-10 py-2 sm:py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[8px] sm:text-[10px] md:text-xs transition-all hover:bg-white/5 w-auto sm:w-auto opacity-80 sm:opacity-100 flex items-center justify-center gap-2"
+            >
+              <svg fill="currentColor" viewBox="0 0 24 24" width="14" height="14" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              HABLAR POR WHATSAPP
+            </a>
           </motion.div>
         </div>
 
@@ -504,7 +510,7 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
         <div 
           onClick={() => {
             setSelectedVariant('NEGRO');
-            setPage('product-detail');
+            setPage('modelo-carajo');
           }}
           className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
         >
@@ -541,7 +547,7 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
         <div 
           onClick={() => {
             setSelectedVariant('BLANCO');
-            setPage('product-detail');
+            setPage('modelo-carajo');
           }}
           className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
         >
@@ -606,12 +612,11 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
   );
 };
 
-const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { productId: string, initialVariant: 'NEGRO' | 'BLANCO', setPage: (p: Page) => void, key?: string }) => {
+const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingText, setEngravingText }: { productId: string, initialVariant: 'NEGRO' | 'BLANCO', setPage: (p: Page) => void, key?: string, engravingText: string, setEngravingText: (t: string) => void }) => {
   const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
   const [selectedColor, setSelectedColor] = useState<'NEGRO' | 'BLANCO'>(initialVariant);
   const currentVariant = product.variants.find(v => v.color === selectedColor) || product.variants[0];
   const [mainImage, setMainImage] = useState(currentVariant.images[0]);
-  const [engravingText, setEngravingText] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [livePrice, setLivePrice] = useState<string | null>("Calculando...");
@@ -757,7 +762,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
                   <label className="text-outline text-[10px] tracking-[0.2em] uppercase font-medium">Grabado laser personalizado</label>
                   <div className="relative group">
                     <input 
-                      className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-habibi tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 placeholder:text-xs uppercase text-center" 
+                      className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-serif tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 placeholder:text-xs uppercase text-center" 
                       maxLength={20} 
                       placeholder="Escribe aquí" 
                       type="text"
@@ -794,9 +799,15 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
                 >
                   {isCheckingOut ? 'PROCESANDO...' : (isAvailable ? 'Comprar Ahora' : 'AGOTADO')}
                 </button>
-                <button className="w-full py-5 border border-outline text-on-surface rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 active:scale-[0.98]">
-                  CONTACTAR A UN ASESOR
-                </button>
+                <a 
+                  href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full py-5 border border-outline text-on-surface rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 active:scale-[0.98] flex items-center justify-center gap-3"
+                >
+                  <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  HABLAR POR WHATSAPP
+                </a>
               </div>
             </div>
 
@@ -935,8 +946,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
   );
 };
 
-const PersonalizePage = ({ setPage, key }: { setPage: (p: Page) => void, key?: string }) => {
-  const [engravingText, setEngravingText] = useState('');
+const PersonalizePage = ({ setPage, key, engravingText, setEngravingText }: { setPage: (p: Page) => void, key?: string, engravingText: string, setEngravingText: (t: string) => void }) => {
   
   const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
 
@@ -995,7 +1005,7 @@ const PersonalizePage = ({ setPage, key }: { setPage: (p: Page) => void, key?: s
               <label className="text-outline text-[10px] tracking-[0.2em] uppercase font-medium">TU MENSAJE (MAX. 20 CARACTERES)</label>
               <div className="relative group">
                 <input 
-                  className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-habibi tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 uppercase" 
+                  className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-serif tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 uppercase" 
                   maxLength={20} 
                   placeholder="Escribe aquí" 
                   type="text"
@@ -1027,7 +1037,7 @@ const PersonalizePage = ({ setPage, key }: { setPage: (p: Page) => void, key?: s
 
           <div className="pt-4 flex flex-col gap-12">
             <button 
-              onClick={() => setPage('product-detail')}
+              onClick={() => setPage('modelo-carajo')}
               className="w-full md:w-80 bg-primary text-on-primary py-5 rounded-full font-bold tracking-[0.2em] hover:brightness-110 transition-all uppercase text-xs shadow-glow"
             >
               CONTINUAR A COMPRA
@@ -1134,24 +1144,27 @@ const AboutPage = ({ key }: { key?: string }) => {
 // --- Main App ---
 
 export default function App() {
+  const [globalEngraving, setGlobalEngraving] = useState('');
   const [page, setPage] = useState<Page>(() => {
     const hash = window.location.hash.replace('#', '') as Page;
-    const validPages: Page[] = ['home', 'collection', 'about', 'personalize', 'product-detail', 'faq', 'terms', 'warranty'];
+    const validPages: Page[] = ['collection', 'about', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
     return validPages.includes(hash) ? hash : 'home';
   });
   const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
 
   useEffect(() => {
-    window.location.hash = page;
+    window.location.hash = page === 'home' ? '' : page;
     window.scrollTo(0, 0);
   }, [page]);
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as Page;
-      const validPages: Page[] = ['home', 'collection', 'about', 'personalize', 'product-detail', 'faq', 'terms', 'warranty'];
+      const validPages: Page[] = ['collection', 'about', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
       if (validPages.includes(hash)) {
         setPage(hash);
+      } else if (hash === '') {
+        setPage('home');
       }
     };
     window.addEventListener('hashchange', handleHashChange);
@@ -1167,8 +1180,8 @@ export default function App() {
           {page === 'home' && <HomePage key="home" setPage={setPage} />}
           {page === 'collection' && <CollectionPage key="collection" setPage={setPage} setSelectedVariant={setSelectedVariant} />}
           {page === 'about' && <AboutPage key="about" />}
-          {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} />}
-          {page === 'product-detail' && <ProductDetailPage key="product-detail" productId="carajo" initialVariant={selectedVariant} setPage={setPage} />}
+          {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
+          {page === 'modelo-carajo' && <ProductDetailPage key="modelo-carajo" productId="carajo" initialVariant={selectedVariant} setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
           {page === 'faq' && <FAQPage key="faq" onBack={() => setPage('home')} />}
           {page === 'terms' && <TermsPage key="terms" onBack={() => setPage('home')} />}
           {page === 'warranty' && <WarrantyPage key="warranty" onBack={() => setPage('home')} />}
@@ -1178,7 +1191,7 @@ export default function App() {
       <Footer setPage={setPage} />
 
       {/* Mobile Bottom Nav */}
-      <div className="hidden min-[390px]:flex md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-full gap-8 shadow-2xl items-center">
+      <div className="hidden min-[390px]:flex md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-full gap-8 shadow-2xl items-center">
         <button onClick={() => setPage('home')} className={`${page === 'home' ? 'text-primary' : 'text-secondary'}`}>
           <Home size={20} />
         </button>
