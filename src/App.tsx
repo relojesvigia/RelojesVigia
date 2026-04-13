@@ -6,6 +6,9 @@
 import { useState, useEffect } from 'react';
 import { createCheckout, getLiveVariantInfo } from './lib/shopify';
 import { motion, AnimatePresence } from 'motion/react';
+import FAQPage from './pages/FAQPage';
+import TermsPage from './pages/TermsPage';
+import WarrantyPage from './pages/WarrantyPage';
 import { 
   ArrowRight, 
   ChevronRight, 
@@ -32,7 +35,7 @@ import {
 
 // --- Types ---
 
-type Page = 'home' | 'collection' | 'about' | 'personalize' | 'product-detail';
+type Page = 'home' | 'collection' | 'about' | 'personalize' | 'product-detail' | 'faq' | 'terms' | 'warranty';
 
 interface ProductVariant {
   color: 'NEGRO' | 'BLANCO';
@@ -181,7 +184,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
   );
 };
 
-const Footer = () => (
+const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
   <footer className="w-full py-20 px-6 md:px-12 border-t border-white/5 bg-stone-950">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
       <div className="flex flex-col gap-4">
@@ -194,21 +197,21 @@ const Footer = () => (
       <div className="flex flex-wrap gap-x-12 gap-y-4">
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Navegación</span>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Inicio</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Colección</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">About</a>
+          <button onClick={() => setPage('home')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Inicio</button>
+          <button onClick={() => setPage('collection')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Colección</button>
+          <button onClick={() => setPage('about')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">About</button>
         </div>
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Legal</span>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Términos</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Privacidad</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Cookies</a>
+          <button onClick={() => setPage('terms')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Términos</button>
+          <button onClick={() => setPage('terms')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Privacidad</button>
+          <button onClick={() => setPage('warranty')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Garantía</button>
         </div>
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Soporte</span>
           <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Contacto</a>
           <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">WhatsApp</a>
-          <a href="#" className="text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">FAQ</a>
+          <button onClick={() => setPage('faq')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">FAQ</button>
         </div>
       </div>
 
@@ -609,9 +612,10 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
   const currentVariant = product.variants.find(v => v.color === selectedColor) || product.variants[0];
   const [mainImage, setMainImage] = useState(currentVariant.images[0]);
   const [engravingText, setEngravingText] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [livePrice, setLivePrice] = useState<string | null>(null);
-  const [isAvailable, setIsAvailable] = useState<boolean>(true);
+  const [livePrice, setLivePrice] = useState<string | null>("Calculando...");
+  const [isAvailable, setIsAvailable] = useState<boolean>(false);
   const suggestions = ['PARA SIEMPRE', 'NOSOTROS', '03.02.26'];
 
   const handleCheckout = async () => {
@@ -628,13 +632,24 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
 
   useEffect(() => {
     setMainImage(currentVariant.images[0]);
+    
+    // Reset states when color changes
+    setLivePrice("Calculando...");
+    setIsAvailable(false);
+
     if (currentVariant.shopifyId) {
       getLiveVariantInfo(currentVariant.shopifyId).then((info) => {
         if (info && info.price) {
           const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: info.price.currencyCode });
           setLivePrice(formatter.format(info.price.amount));
           setIsAvailable(info.availableForSale);
+        } else {
+          setLivePrice("No Disponible");
+          setIsAvailable(false);
         }
+      }).catch(() => {
+        setLivePrice("Error de conexión");
+        setIsAvailable(false);
       });
     }
   }, [selectedColor, currentVariant.shopifyId]);
@@ -710,13 +725,15 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
               <div className="flex justify-between items-end">
                 <div>
                   <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio</span>
-                  <span className="text-4xl font-serif text-on-surface">{livePrice || product.price}</span>
+                  <span className={`font-serif text-on-surface ${livePrice === "Calculando..." || livePrice === "No Disponible" || livePrice === "Error de conexión" ? "text-xl text-secondary italic" : "text-4xl"}`}>
+                    {livePrice}
+                  </span>
                 </div>
                 <div className="text-right">
-                  <span className={`text-[10px] tracking-[0.2em] uppercase block mb-1 ${isAvailable ? 'text-primary' : 'text-red-500'}`}>
-                    {isAvailable ? 'En Stock' : 'Agotado'}
+                  <span className={`text-[10px] tracking-[0.2em] uppercase block mb-1 ${isAvailable ? 'text-primary' : (livePrice === "Calculando..." ? 'text-secondary' : 'text-red-500')}`}>
+                    {livePrice === "Calculando..." ? 'CONECTANDO...' : (isAvailable ? 'En Stock' : 'Agotado')}
                   </span>
-                  <span className="text-xs text-secondary">{isAvailable ? 'Entrega de Atelier' : 'No disponible'}</span>
+                  <span className="text-xs text-secondary">{livePrice === "Calculando..." ? 'Verificando con Atelier' : (isAvailable ? 'Entrega de Atelier' : 'No disponible')}</span>
                 </div>
               </div>
 
@@ -771,7 +788,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
 
               <div className="flex flex-col gap-4">
                 <button 
-                  onClick={handleCheckout}
+                  onClick={() => setShowModal(true)}
                   disabled={isCheckingOut || !isAvailable}
                   className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -830,6 +847,90 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key }: { produc
           ))}
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+            {/* Blurred background overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowModal(false)}
+              className="absolute inset-0 bg-stone-950/80 backdrop-blur-md"
+            />
+            
+            {/* Modal Content */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-surface-low border border-white/10 p-8 md:p-12 rounded-3xl max-w-lg w-full shadow-2xl flex flex-col items-center text-center"
+            >
+              <div className="absolute -top-12 opacity-50">
+                <Sparkles size={32} className="text-primary" />
+              </div>
+              <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-6">Confirmación</span>
+              
+              {engravingText.trim() === '' ? (
+                <>
+                  <h3 className="text-2xl md:text-3xl font-serif text-on-surface mb-4">¿Quieres agregar un grabado personalizado sin costo?</h3>
+                  <p className="text-secondary text-sm font-light leading-relaxed mb-10">
+                    Si no escribes nada, tu reloj llevará el grabado predeterminado del modelo.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 w-full">
+                    <button 
+                      onClick={() => setShowModal(false)}
+                      className="w-full py-4 border border-outline text-on-surface rounded-full font-serif tracking-[0.1em] uppercase text-[10px] transition-all hover:bg-white/5 active:scale-[0.98]"
+                    >
+                      ← Agregar grabado
+                    </button>
+                    <button 
+                      onClick={() => {
+                         setShowModal(false);
+                         handleCheckout();
+                      }}
+                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow"
+                    >
+                      Continuar sin personalizar →
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-2xl md:text-3xl font-serif text-on-surface mb-4">Confirma tu grabado:</h3>
+                  <div className="bg-surface-lowest border border-white/5 w-full py-6 rounded-2xl mb-6 shadow-inner">
+                    <span className="font-serif text-xl md:text-2xl tracking-[0.2em] text-primary break-words px-4">
+                      "{engravingText.toUpperCase()}"
+                    </span>
+                  </div>
+                  <p className="text-secondary text-sm font-light leading-relaxed mb-10">
+                    ¿Deseas continuar con este mensaje?
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 w-full">
+                    <button 
+                      onClick={() => setShowModal(false)}
+                      className="w-full py-4 border border-outline text-on-surface rounded-full font-serif tracking-[0.1em] uppercase text-[10px] transition-all hover:bg-white/5 active:scale-[0.98]"
+                    >
+                      ← Editar grabado
+                    </button>
+                    <button 
+                      onClick={() => {
+                         setShowModal(false);
+                         handleCheckout();
+                      }}
+                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow"
+                    >
+                      Confirmar y continuar →
+                    </button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
@@ -1033,12 +1134,29 @@ const AboutPage = ({ key }: { key?: string }) => {
 // --- Main App ---
 
 export default function App() {
-  const [page, setPage] = useState<Page>('home');
+  const [page, setPage] = useState<Page>(() => {
+    const hash = window.location.hash.replace('#', '') as Page;
+    const validPages: Page[] = ['home', 'collection', 'about', 'personalize', 'product-detail', 'faq', 'terms', 'warranty'];
+    return validPages.includes(hash) ? hash : 'home';
+  });
   const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
 
   useEffect(() => {
+    window.location.hash = page;
     window.scrollTo(0, 0);
   }, [page]);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') as Page;
+      const validPages: Page[] = ['home', 'collection', 'about', 'personalize', 'product-detail', 'faq', 'terms', 'warranty'];
+      if (validPages.includes(hash)) {
+        setPage(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-surface text-on-surface selection:bg-primary/30 selection:text-primary overflow-x-hidden">
@@ -1051,10 +1169,13 @@ export default function App() {
           {page === 'about' && <AboutPage key="about" />}
           {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} />}
           {page === 'product-detail' && <ProductDetailPage key="product-detail" productId="carajo" initialVariant={selectedVariant} setPage={setPage} />}
+          {page === 'faq' && <FAQPage key="faq" onBack={() => setPage('home')} />}
+          {page === 'terms' && <TermsPage key="terms" onBack={() => setPage('home')} />}
+          {page === 'warranty' && <WarrantyPage key="warranty" onBack={() => setPage('home')} />}
         </AnimatePresence>
       </main>
 
-      <Footer />
+      <Footer setPage={setPage} />
 
       {/* Mobile Bottom Nav */}
       <div className="hidden min-[390px]:flex md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-full gap-8 shadow-2xl items-center">
