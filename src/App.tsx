@@ -35,7 +35,7 @@ import {
 
 // --- Types ---
 
-type Page = 'home' | 'collection' | 'about' | 'personalize' | 'modelo-carajo' | 'faq' | 'terms' | 'warranty';
+type Page = 'home' | 'collection' | 'nosotros' | 'personalize' | 'modelo-carajo' | 'faq' | 'terms' | 'warranty';
 
 interface ProductVariant {
   color: 'NEGRO' | 'BLANCO';
@@ -102,7 +102,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
     { label: 'Inicio', value: 'home' },
     { label: 'Personalizar', value: 'personalize' },
     { label: 'Colección', value: 'collection' },
-    { label: 'About', value: 'about' },
+    { label: 'Nosotros', value: 'nosotros' },
   ];
 
   return (
@@ -110,7 +110,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
       <div className="md:hidden w-8" /> {/* Spacer for mobile centering */}
       
       <div 
-        className="font-habibi text-3xl tracking-[0.2em] text-on-surface cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0" 
+        className="font-habibi text-2xl tracking-[0.05em] text-on-surface cursor-pointer absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0" 
         onClick={() => setPage('home')}
       >
         VIGIA
@@ -188,7 +188,7 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
   <footer className="w-full py-20 px-6 md:px-12 border-t border-white/5 bg-stone-950">
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
       <div className="flex flex-col gap-4">
-        <span className="font-habibi text-on-surface tracking-[0.2em] text-3xl">VIGIA</span>
+        <span className="font-habibi text-on-surface tracking-[0.05em] text-3xl">VIGIA</span>
         <p className="font-sans tracking-[0.15em] text-[10px] uppercase text-secondary max-w-xs leading-relaxed">
           Hecho para durar más que el tiempo. Cada pieza es un manifiesto de permanencia.
         </p>
@@ -199,7 +199,7 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Navegación</span>
           <button onClick={() => setPage('home')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Inicio</button>
           <button onClick={() => setPage('collection')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Colección</button>
-          <button onClick={() => setPage('about')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">About</button>
+          <button onClick={() => setPage('nosotros')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">About</button>
         </div>
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Legal</span>
@@ -1147,20 +1147,20 @@ export default function App() {
   const [globalEngraving, setGlobalEngraving] = useState('');
   const [page, setPage] = useState<Page>(() => {
     const hash = window.location.hash.replace('#', '') as Page;
-    const validPages: Page[] = ['collection', 'about', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
+    const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
     return validPages.includes(hash) ? hash : 'home';
   });
   const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
 
   useEffect(() => {
-    window.location.hash = page === 'home' ? '' : page;
+    window.location.hash = page;
     window.scrollTo(0, 0);
   }, [page]);
 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as Page;
-      const validPages: Page[] = ['collection', 'about', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
+      const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
       if (validPages.includes(hash)) {
         setPage(hash);
       } else if (hash === '') {
@@ -1179,7 +1179,7 @@ export default function App() {
         <AnimatePresence mode="wait">
           {page === 'home' && <HomePage key="home" setPage={setPage} />}
           {page === 'collection' && <CollectionPage key="collection" setPage={setPage} setSelectedVariant={setSelectedVariant} />}
-          {page === 'about' && <AboutPage key="about" />}
+          {page === 'nosotros' && <AboutPage key="nosotros" />}
           {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
           {page === 'modelo-carajo' && <ProductDetailPage key="modelo-carajo" productId="carajo" initialVariant={selectedVariant} setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
           {page === 'faq' && <FAQPage key="faq" onBack={() => setPage('home')} />}
@@ -1201,7 +1201,7 @@ export default function App() {
         <button onClick={() => setPage('collection')} className={`${page === 'collection' ? 'text-primary' : 'text-secondary'}`}>
           <Watch size={20} />
         </button>
-        <button onClick={() => setPage('about')} className={`${page === 'about' ? 'text-primary' : 'text-secondary'} flex items-center justify-center`}>
+        <button onClick={() => setPage('nosotros')} className={`${page === 'nosotros' ? 'text-primary' : 'text-secondary'} flex items-center justify-center`}>
           <span className="font-habibi text-xl leading-none">V</span>
         </button>
       </div>
