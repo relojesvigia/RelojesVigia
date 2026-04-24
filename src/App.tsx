@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { createCheckout, getLiveVariantInfo } from './lib/shopify';
+import { createCheckout, getLiveVariantInfo, getCart, createCart, addToCart, removeFromCart } from './lib/shopify';
 import { motion, AnimatePresence } from 'motion/react';
 import FAQPage from './pages/FAQPage';
 import TermsPage from './pages/TermsPage';
@@ -27,10 +27,10 @@ import {
   Shield,
   UserCheck,
   MapPin,
-  Home,
-  Palette,
-  Watch,
-  Truck
+  Truck,
+  ShoppingBag,
+  Trash2,
+  Loader2
 } from 'lucide-react';
 
 // --- Types ---
@@ -88,7 +88,7 @@ const PRODUCTS: Product[] = [
 
 // --- Components ---
 
-const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page) => void }) => {
+const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPage: Page, setPage: (p: Page) => void, cartItemCount: number, onOpenCart: () => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -101,7 +101,7 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
   const navLinks: { label: string, value: Page }[] = [
     { label: 'Inicio', value: 'home' },
     { label: 'Personalizar', value: 'personalize' },
-    { label: 'Colección', value: 'collection' },
+    { label: 'Relojes', value: 'collection' },
     { label: 'Nosotros', value: 'nosotros' },
   ];
 
@@ -134,6 +134,14 @@ const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page
       </div>
 
       <div className="flex items-center gap-4">
+        <button onClick={onOpenCart} className="relative text-on-surface hover:text-primary transition-colors p-2 md:mr-2">
+          <ShoppingBag size={20} />
+          {cartItemCount > 0 && (
+            <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary text-[10px] rounded-full flex items-center justify-center font-bold shadow-glow">
+              {cartItemCount}
+            </span>
+          )}
+        </button>
         <button 
           onClick={() => setPage('collection')} 
           className="hidden sm:block bg-primary text-on-primary px-8 py-2.5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] transition-all hover:scale-105 hover:shadow-glow"
@@ -198,7 +206,7 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
         <div className="flex flex-col gap-4">
           <span className="text-[10px] tracking-[0.2em] uppercase text-primary font-bold">Navegación</span>
           <button onClick={() => setPage('home')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Inicio</button>
-          <button onClick={() => setPage('collection')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Colección</button>
+          <button onClick={() => setPage('collection')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">Relojes</button>
           <button onClick={() => setPage('nosotros')} className="text-left text-[10px] tracking-[0.15em] uppercase text-secondary hover:text-on-surface transition-colors">About</button>
         </div>
         <div className="flex flex-col gap-4">
@@ -247,7 +255,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
       className="flex flex-col"
     >
       {/* Hero Section */}
-      <section className="relative h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 overflow-hidden py-20 md:py-0">
         <div className="absolute inset-0 z-0">
           <video 
             autoPlay 
@@ -261,12 +269,12 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
           <div className="absolute inset-0 bg-gradient-to-b from-surface via-transparent to-surface" />
         </div>
 
-        <div className="relative z-10 text-center px-6 max-w-5xl">
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-start md:items-center text-left md:text-center pt-12 md:pt-0">
           <motion.span 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-serif text-primary tracking-[0.4em] uppercase text-[10px] md:text-xs mb-2 md:mb-6 block"
+            className="font-serif text-primary tracking-[0.4em] uppercase text-[10px] md:text-xs mb-4 md:mb-6 block"
           >
             Horología de Precisión
           </motion.span>
@@ -274,7 +282,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-4xl md:text-8xl font-serif text-on-surface leading-tight mb-4 md:mb-8"
+            className="text-4xl md:text-8xl font-serif text-on-surface leading-[1.1] md:leading-tight mb-6 md:mb-8 max-w-4xl"
           >
             VIGIA: <span className="italic font-normal">El Legado</span> que se Lleva en la Muñeca
           </motion.h1>
@@ -282,7 +290,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="hidden md:block text-secondary text-base md:text-xl max-w-2xl mx-auto mb-8 md:mb-12 font-light leading-relaxed"
+            className="text-secondary text-sm md:text-xl max-w-xl md:mx-auto mb-10 md:mb-12 font-light leading-relaxed"
           >
             No es solo un reloj, es la historia de tus momentos más valiosos capturada en acero y zafiro. Una pieza diseñada para trascender generaciones.
           </motion.p>
@@ -290,11 +298,11 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start md:justify-center gap-4 w-full sm:w-auto"
           >
             <button 
               onClick={() => setPage('collection')}
-              className="bg-primary text-on-primary px-8 md:px-10 py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:scale-105 hover:shadow-glow w-full sm:w-auto"
+              className="bg-primary text-on-primary px-8 md:px-12 py-4 md:py-5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:scale-105 hover:shadow-glow shadow-2xl"
             >
               COMPRAR AHORA
             </button>
@@ -302,28 +310,12 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
               href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="border border-outline/30 sm:border-outline text-on-surface px-4 sm:px-8 md:px-10 py-2 sm:py-3.5 md:py-4 rounded-full font-serif tracking-[0.2em] uppercase text-[8px] sm:text-[10px] md:text-xs transition-all hover:bg-white/5 w-auto sm:w-auto opacity-80 sm:opacity-100 flex items-center justify-center gap-2"
+              className="border border-outline/30 text-on-surface px-8 md:px-12 py-4 md:py-5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:bg-white/5 flex items-center justify-center gap-3"
             >
-              <svg fill="currentColor" viewBox="0 0 24 24" width="14" height="14" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               HABLAR POR WHATSAPP
             </a>
           </motion.div>
-        </div>
-
-        <div className="absolute bottom-6 md:bottom-12 left-0 w-full px-6">
-          <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-y-4 gap-x-4 md:gap-12 max-w-3xl mx-auto">
-            {[
-              { icon: <Shield size={14} />, text: "Garantía de 24 meses" },
-              { icon: <Shield size={14} />, text: "Pagos seguros" },
-              { icon: <MapPin size={14} />, text: "Hecho en México" },
-              { icon: <UserCheck size={14} />, text: "Trato Personal" },
-            ].map((badge, i) => (
-              <div key={i} className="flex items-center gap-2 md:gap-3 whitespace-nowrap justify-center">
-                <span className="text-primary">{badge.icon}</span>
-                <span className="text-[8px] md:text-[10px] tracking-[0.2em] uppercase text-secondary">{badge.text}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -374,15 +366,15 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             <div className="grid grid-cols-2 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-8 mb-10 md:mb-16">
               <div>
                 <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Material</span>
-                <span className="text-xl font-serif text-on-surface">316L Steel</span>
+                <span className="text-xl font-serif text-on-surface">Acero 316L</span>
               </div>
               <div>
                 <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Cristal</span>
-                <span className="text-xl font-serif text-on-surface">Sapphire</span>
+                <span className="text-xl font-serif text-on-surface">Zafiro</span>
               </div>
               <div>
                 <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Movimiento</span>
-                <span className="text-xl font-serif text-on-surface">Automatic</span>
+                <span className="text-xl font-serif text-on-surface">Automático Japonés</span>
               </div>
               <div>
                 <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Resistencia</span>
@@ -391,11 +383,10 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             </div>
 
             <button 
-              onClick={() => setPage('collection')}
-              className="group flex items-center gap-4 text-on-surface hover:text-primary transition-colors"
+              onClick={() => setPage('modelo-carajo')}
+              className="bg-primary text-on-primary px-8 md:px-12 py-4 md:py-5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] md:text-xs transition-all hover:scale-105 hover:shadow-glow shadow-2xl"
             >
-              <span className="font-serif tracking-[0.3em] uppercase text-sm">Ver Producto</span>
-              <div className="w-12 h-[1px] bg-outline group-hover:bg-primary transition-all group-hover:w-20" />
+              VER PRODUCTO
             </button>
           </div>
         </div>
@@ -403,14 +394,14 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
 
       {/* Process Steps */}
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto text-center">
-        <h2 className="text-3xl md:text-5xl font-serif italic mb-12 md:mb-20">Hazlo personal. <span className="text-primary font-normal not-italic">Hazlo permanente.</span></h2>
+        <h2 className="text-3xl md:text-5xl font-serif mb-12 md:mb-20">Hazlo personal. <span className="text-primary font-normal">Hazlo permanente.</span></h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
           <div className="flex flex-col items-center">
             <span className="text-4xl md:text-6xl font-serif text-white/5 mb-4 md:mb-6">01</span>
-            <h3 className="text-lg md:text-xl font-serif tracking-[0.1em] uppercase mb-2 md:mb-4">Elige tu base</h3>
+            <h3 className="text-lg md:text-xl font-serif tracking-[0.1em] uppercase mb-2 md:mb-4">Elige tu reloj</h3>
             <p className="text-secondary text-xs md:text-sm leading-relaxed max-w-xs">
-              Selecciona entre nuestras configuraciones de acero, cueros y esferas minimalistas.
+              Selecciona uno de nuestros modelos de reloj de acero.
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -502,7 +493,7 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
     >
       <header className="mb-12 md:mb-20">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 block">Colección Actual</span>
-        <h1 className="text-5xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Monolitos</h1>
+        <h1 className="text-5xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Relojes</h1>
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12 mb-16 md:mb-32">
@@ -512,13 +503,13 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
             setSelectedVariant('NEGRO');
             setPage('modelo-carajo');
           }}
-          className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
+          className="group bg-surface-low rounded-2xl p-4 md:p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
         >
           <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
+              <span className="text-[10px] md:text-xs font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
               <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">Modelo Carajo</h2>
-              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">NEGRO</p>
+              <p className="text-secondary text-[10px] md:text-xs tracking-widest uppercase">NEGRO</p>
             </div>
           </div>
           <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
@@ -549,13 +540,13 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
             setSelectedVariant('BLANCO');
             setPage('modelo-carajo');
           }}
-          className="group bg-surface-low rounded-2xl p-4 md:p-10 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
+          className="group bg-surface-low rounded-2xl p-4 md:p-8 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl border border-white/5 cursor-pointer"
         >
           <div className="flex justify-between items-start mb-4 md:mb-12">
             <div>
-              <span className="text-[8px] md:text-[10px] font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
+              <span className="text-[10px] md:text-xs font-serif tracking-widest text-primary mb-1 md:mb-2 block uppercase">VIGIA 01</span>
               <h2 className="text-sm md:text-4xl font-serif text-on-surface mb-1 md:mb-2">Modelo Carajo</h2>
-              <p className="text-secondary text-[8px] md:text-[10px] tracking-widest uppercase">BLANCO</p>
+              <p className="text-secondary text-[10px] md:text-xs tracking-widest uppercase">BLANCO</p>
             </div>
           </div>
           <div className="aspect-square rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-12 shadow-2xl">
@@ -612,7 +603,7 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
   );
 };
 
-const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingText, setEngravingText }: { productId: string, initialVariant: 'NEGRO' | 'BLANCO', setPage: (p: Page) => void, key?: string, engravingText: string, setEngravingText: (t: string) => void }) => {
+const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingText, setEngravingText, onAddToCart }: { productId: string, initialVariant: 'NEGRO' | 'BLANCO', setPage: (p: Page) => void, key?: string, engravingText: string, setEngravingText: (t: string) => void, onAddToCart: (variantId: string, text: string) => Promise<void> }) => {
   const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
   const [selectedColor, setSelectedColor] = useState<'NEGRO' | 'BLANCO'>(initialVariant);
   const currentVariant = product.variants.find(v => v.color === selectedColor) || product.variants[0];
@@ -626,11 +617,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
   const handleCheckout = async () => {
     try {
       setIsCheckingOut(true);
-      const url = await createCheckout(currentVariant.shopifyId as string, engravingText);
-      window.location.href = url;
+      await onAddToCart(currentVariant.shopifyId as string, engravingText);
+      setIsCheckingOut(false);
+      setShowModal(false);
     } catch (e: any) {
       console.error(e);
-      alert(e.message || "Error al procesar el pago. Por favor intenta de nuevo.");
+      alert(e.message || "Error al agregar al carrito. Por favor intenta de nuevo.");
       setIsCheckingOut(false);
     }
   };
@@ -673,7 +665,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
           className="flex items-center gap-2 font-serif tracking-widest uppercase text-[10px] text-primary hover:text-on-surface transition-colors"
         >
           <ArrowRight size={12} className="rotate-180" />
-          Regresar a la colección
+          Regresar a los relojes
         </button>
       </div>
 
@@ -682,9 +674,6 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
         <div className="lg:hidden space-y-2">
           <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-semibold">Primera Edición de Vigía</span>
           <h1 className="text-5xl font-serif tracking-tighter text-on-surface uppercase">{product.name}</h1>
-          <p className="text-secondary font-light leading-relaxed text-sm">
-            {product.description}
-          </p>
         </div>
 
         {/* Left: Gallery */}
@@ -721,9 +710,6 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
             <div className="hidden lg:block space-y-4">
               <span className="text-[10px] tracking-[0.4em] uppercase text-primary font-semibold">Primera Edición de Vigía</span>
               <h1 className="text-5xl md:text-8xl font-serif tracking-tighter text-on-surface uppercase">{product.name}</h1>
-              <p className="text-secondary font-light leading-relaxed max-w-md">
-                {product.description}
-              </p>
             </div>
 
             <div className="p-8 bg-surface-low rounded-2xl border border-white/5 space-y-8 mt-0">
@@ -764,7 +750,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
                     <input 
                       className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-serif tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 placeholder:text-xs uppercase text-center" 
                       maxLength={20} 
-                      placeholder="Escribe aquí" 
+                      placeholder="AQUÍ TU MENSAJE" 
                       type="text"
                       value={engravingText}
                       onChange={(e) => setEngravingText(e.target.value.toUpperCase())}
@@ -795,9 +781,10 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
                 <button 
                   onClick={() => setShowModal(true)}
                   disabled={isCheckingOut || !isAvailable}
-                  className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                 >
-                  {isCheckingOut ? 'PROCESANDO...' : (isAvailable ? 'Comprar Ahora' : 'AGOTADO')}
+                  {isCheckingOut ? <Loader2 size={18} className="animate-spin" /> : null}
+                  {isCheckingOut ? 'AGREGANDO...' : (isAvailable ? 'Agregar al Carrito' : 'AGOTADO')}
                 </button>
                 <a 
                   href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" 
@@ -828,34 +815,42 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
         </div>
       </div>
 
-      {/* Technical Specifications */}
       <section className="mt-24 md:mt-40">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16 gap-8">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl font-serif italic text-on-surface mb-6">Arquitectura Técnica</h2>
-            <div className="h-1 w-24 bg-primary mb-6"></div>
-            <p className="text-secondary font-light leading-relaxed">Ingeniería de precisión para superar los estándares de la alta relojería. Cada componente del VIGIA es seleccionado por su longevidad y equilibrio estético.</p>
-          </div>
-          <div className="text-right">
-            <span className="text-[10px] tracking-[0.5em] uppercase text-outline">Hoja de Especificaciones Rev. 02.24</span>
-          </div>
+        <div className="mb-8 md:mb-10">
+          <h2 className="text-4xl md:text-5xl font-serif italic text-on-surface mb-6">Especificaciones del reloj</h2>
+          <div className="h-1 w-24 bg-primary"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 border border-white/5 overflow-hidden rounded-2xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-2 max-w-7xl bg-surface-low/30 p-6 md:p-12 rounded-3xl border border-white/5">
           {[
-            { label: "Calibración", title: "Movimiento", text: "Automático Jap (Calibre V-12) con parada de segundero y 24 joyas con carga bidireccional." },
-            { label: "Chasis", title: "Material", text: "Acero inoxidable 316L de alta calidad con revestimiento de PVD de obsidiana doble cepillado." },
-            { label: "Óptica", title: "Cristal", text: "Cristal de zafiro resistente a los arañazos con 5 capas de revestimiento antirreflectante interno." },
-            { label: "Resistencia", title: "Resistencia al Agua", text: "Probado a 5 ATM (50 Metros / 165 Pies). Adecuado para períodos cortos de natación recreativa." },
-            { label: "Geometría", title: "Diámetro de Caja", text: "Ancho de caja de 42.0mm. Grosor de 12.8mm. 48.5mm de asa a asa para presencia y comodidad." },
-            { label: "Autonomía", title: "Reserva de Marcha", text: "Aprox. 41 horas con carga completa. Sistema de cuerda automática alimentado por el movimiento natural." }
+            { label: "Diámetro de caja", value: "40mm" },
+            { label: "Caja y correa", value: "Acero inoxidable 316-L" },
+            { label: "Tipo de cristal", value: "Safiro" },
+            { label: "Tipo de movimiento", value: "Automático japonés" },
+            { label: "Resistencia al agua", value: "5 ATM" },
+            { label: "Reserva de marcha", value: "41 horas" },
+            { label: "Ancho de correa", value: "20mm" },
+            { label: "Tipo de cierre", value: "Buckle" },
+            { label: "Tipo de lume", value: "No brilla" },
+            { label: "Grabado", value: "Permanente láser" },
           ].map((spec, i) => (
-            <div key={i} className="bg-surface-low p-8 md:p-10 space-y-4">
-              <span className="text-[10px] tracking-[0.3em] uppercase text-primary">{spec.label}</span>
-              <h3 className="text-xl font-serif text-on-surface">{spec.title}</h3>
-              <p className="text-secondary text-sm font-light leading-relaxed">{spec.text}</p>
+            <div key={i} className="flex justify-between items-center py-4 border-b border-white/5 last:border-0 md:[&:nth-last-child(2)]:border-0">
+              <span className="text-[11px] tracking-[0.2em] uppercase text-secondary font-medium">{spec.label}</span>
+              <span className="text-base font-serif text-on-surface">{spec.value}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Origin Section */}
+      <section className="mt-24 md:mt-40 bg-surface-low rounded-3xl p-8 md:p-20 border border-white/5 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] rounded-full -mr-32 -mt-32"></div>
+        <div className="max-w-3xl relative z-10">
+          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-6">Origen del nombre</span>
+          <h2 className="text-4xl md:text-6xl font-serif text-on-surface mb-8 italic">¿Qué es un Carajo?</h2>
+          <p className="text-secondary text-lg md:text-xl font-light leading-relaxed italic">
+            "{product.description}"
+          </p>
         </div>
       </section>
 
@@ -898,13 +893,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
                       ← Agregar grabado
                     </button>
                     <button 
-                      onClick={() => {
-                         setShowModal(false);
-                         handleCheckout();
-                      }}
-                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow"
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow flex justify-center items-center gap-2"
                     >
-                      Continuar sin personalizar →
+                      {isCheckingOut ? <Loader2 size={14} className="animate-spin" /> : null}
+                      {isCheckingOut ? 'AGREGANDO...' : 'Continuar sin personalizar →'}
                     </button>
                   </div>
                 </>
@@ -927,13 +921,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
                       ← Editar grabado
                     </button>
                     <button 
-                      onClick={() => {
-                         setShowModal(false);
-                         handleCheckout();
-                      }}
-                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow"
+                      onClick={handleCheckout}
+                      disabled={isCheckingOut}
+                      className="w-full py-4 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.1em] text-[10px] transition-all hover:brightness-110 active:scale-[0.98] shadow-glow flex justify-center items-center gap-2"
                     >
-                      Confirmar y continuar →
+                      {isCheckingOut ? <Loader2 size={14} className="animate-spin" /> : null}
+                      {isCheckingOut ? 'AGREGANDO...' : 'Confirmar y agregar →'}
                     </button>
                   </div>
                 </>
@@ -1002,12 +995,12 @@ const PersonalizePage = ({ setPage, key, engravingText, setEngravingText }: { se
           <div className="space-y-8">
             {/* Minimal Input Design */}
             <div className="space-y-4">
-              <label className="text-outline text-[10px] tracking-[0.2em] uppercase font-medium">TU MENSAJE (MAX. 20 CARACTERES)</label>
+              <label className="text-outline text-[10px] tracking-[0.2em] uppercase font-medium">Grabado laser personalizado</label>
               <div className="relative group">
                 <input 
                   className="w-full bg-transparent border-b border-white/10 py-4 px-0 text-xl font-serif tracking-widest text-primary focus:outline-none focus:border-primary transition-all duration-500 placeholder:text-white/20 uppercase" 
                   maxLength={20} 
-                  placeholder="Escribe aquí" 
+                  placeholder="AQUÍ TU MENSAJE" 
                   type="text"
                   value={engravingText}
                   onChange={(e) => setEngravingText(e.target.value.toUpperCase())}
@@ -1110,18 +1103,18 @@ const AboutPage = ({ key }: { key?: string }) => {
           <p className="text-secondary italic font-serif text-sm md:text-base">"Hecho para durar más que el tiempo."</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {[
             { title: "Familia", icon: <Shield />, text: "El reloj no es tuyo; solo lo custodias para la siguiente generación." },
             { title: "Amor", icon: <Quote />, text: "Dedicación obsesiva en cada micro-ajuste, porque lo que se ama se cuida." },
             { title: "Integridad", icon: <UserCheck />, text: "Materiales nobles y procesos transparentes. Sin atajos, sin artificios." },
             { title: "Belleza cotidiana", icon: <Sparkles />, text: "Encontrar lo extraordinario en el segundero que marca el presente." }
           ].map((v, i) => (
-            <div key={i} className="bg-surface-low p-8 md:p-10 rounded-2xl border border-white/5 flex flex-col gap-6 md:gap-8">
+            <div key={i} className="bg-surface-low p-6 md:p-10 rounded-2xl border border-white/5 flex flex-col gap-4 md:gap-8">
               <div className="text-primary">{v.icon}</div>
               <div>
-                <h3 className="text-lg md:text-xl font-serif text-on-surface mb-3 md:mb-4">{v.title}</h3>
-                <p className="text-secondary text-xs md:text-sm leading-relaxed">{v.text}</p>
+                <h3 className="text-lg md:text-xl font-serif text-on-surface mb-2 md:mb-4">{v.title}</h3>
+                <p className="text-on-surface/80 text-base md:text-lg font-light leading-relaxed">{v.text}</p>
               </div>
             </div>
           ))}
@@ -1141,6 +1134,97 @@ const AboutPage = ({ key }: { key?: string }) => {
   );
 };
 
+const CartDrawer = ({ isOpen, onClose, cart, onRemoveItem }: { isOpen: boolean, onClose: () => void, cart: any, onRemoveItem: (lineId: string) => void }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-[100]"
+          />
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed top-0 right-0 h-full w-full max-w-md bg-surface border-l border-white/10 z-[101] flex flex-col shadow-2xl"
+          >
+            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-surface-low">
+              <h2 className="font-serif text-xl tracking-widest text-on-surface uppercase">Tu Carrito</h2>
+              <button onClick={onClose} className="text-secondary hover:text-primary transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="flex-grow overflow-y-auto p-6 space-y-6">
+              {!cart || !cart.lines?.edges?.length ? (
+                <div className="h-full flex flex-col items-center justify-center text-secondary space-y-4">
+                  <ShoppingBag size={48} className="opacity-20" />
+                  <p className="font-serif tracking-widest uppercase text-xs">Tu carrito está vacío</p>
+                  <button onClick={onClose} className="text-primary text-xs tracking-widest uppercase hover:underline">Continuar comprando</button>
+                </div>
+              ) : (
+                cart.lines.edges.map(({ node }: any) => {
+                  const engraving = node.attributes?.find((a: any) => a.key === 'Grabado')?.value;
+                  return (
+                    <div key={node.id} className="flex gap-4 bg-surface-lowest p-4 rounded-2xl border border-white/5 relative group">
+                      <div className="w-24 h-24 bg-surface-low rounded-xl overflow-hidden shrink-0">
+                        <img src={node.merchandise.image?.url} alt={node.merchandise.product.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col justify-between py-1 flex-grow">
+                        <div>
+                          <div className="flex justify-between items-start">
+                            <h3 className="font-serif text-on-surface uppercase text-sm">{node.merchandise.product.title}</h3>
+                            <button onClick={() => onRemoveItem(node.id)} className="text-secondary hover:text-red-500 transition-colors">
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                          <p className="text-xs text-secondary tracking-widest uppercase mt-1">{node.merchandise.title}</p>
+                          {engraving && (
+                            <p className="text-[10px] text-primary tracking-widest uppercase mt-2">Grabado: "{engraving}"</p>
+                          )}
+                        </div>
+                        <div className="flex justify-between items-end mt-2">
+                          <span className="text-xs text-secondary">Cant: {node.quantity}</span>
+                          <span className="font-serif text-on-surface">
+                            {new Intl.NumberFormat('es-MX', { style: 'currency', currency: node.merchandise.price.currencyCode }).format(node.merchandise.price.amount)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {cart && cart.lines?.edges?.length > 0 && (
+              <div className="p-6 border-t border-white/10 bg-surface-low space-y-6">
+                <div className="flex justify-between items-center text-on-surface">
+                  <span className="text-xs tracking-widest uppercase text-secondary">Subtotal</span>
+                  <span className="font-serif text-xl">
+                    {new Intl.NumberFormat('es-MX', { style: 'currency', currency: cart.cost.totalAmount.currencyCode }).format(cart.cost.totalAmount.amount)}
+                  </span>
+                </div>
+                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos y envíos calculados al pagar</p>
+                <a 
+                  href={cart.checkoutUrl}
+                  className="w-full block text-center py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow"
+                >
+                  Proceder al Pago
+                </a>
+              </div>
+            )}
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
@@ -1151,6 +1235,61 @@ export default function App() {
     return validPages.includes(hash) ? hash : 'home';
   });
   const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
+
+  // Cart State
+  const [cart, setCart] = useState<any>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      const savedCartId = localStorage.getItem('vigia_cart_id');
+      if (savedCartId) {
+        try {
+          const currentCart = await getCart(savedCartId);
+          if (currentCart) {
+            setCart(currentCart);
+          } else {
+            localStorage.removeItem('vigia_cart_id');
+          }
+        } catch (e) {
+          console.error('Error fetching cart', e);
+        }
+      }
+    };
+    fetchCart();
+  }, []);
+
+  const handleAddToCart = async (variantId: string, text: string) => {
+    try {
+      let updatedCart;
+      if (cart?.id) {
+        updatedCart = await addToCart(cart.id, variantId, text);
+      } else {
+        updatedCart = await createCart(variantId, text);
+        localStorage.setItem('vigia_cart_id', updatedCart.id);
+      }
+      
+      const fullCart = await getCart(updatedCart.id);
+      setCart(fullCart);
+      setIsCartOpen(true);
+    } catch (e: any) {
+      console.error(e);
+      throw e;
+    }
+  };
+
+  const handleRemoveFromCart = async (lineId: string) => {
+    if (!cart?.id) return;
+    try {
+      const updatedCart = await removeFromCart(cart.id, lineId);
+      const fullCart = await getCart(updatedCart.id);
+      setCart(fullCart);
+    } catch (e) {
+      console.error('Error removing item', e);
+    }
+  };
+
+  const cartItemCount = cart?.lines?.edges?.reduce((acc: number, curr: any) => acc + curr.node.quantity, 0) || 0;
 
   useEffect(() => {
     window.location.hash = page;
@@ -1173,7 +1312,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-surface text-on-surface selection:bg-primary/30 selection:text-primary overflow-x-hidden">
-      <Navbar currentPage={page} setPage={setPage} />
+      <Navbar currentPage={page} setPage={setPage} cartItemCount={cartItemCount} onOpenCart={() => setIsCartOpen(true)} />
       
       <main className="flex-grow">
         <AnimatePresence mode="wait">
@@ -1181,7 +1320,7 @@ export default function App() {
           {page === 'collection' && <CollectionPage key="collection" setPage={setPage} setSelectedVariant={setSelectedVariant} />}
           {page === 'nosotros' && <AboutPage key="nosotros" />}
           {page === 'personalize' && <PersonalizePage key="personalize" setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
-          {page === 'modelo-carajo' && <ProductDetailPage key="modelo-carajo" productId="carajo" initialVariant={selectedVariant} setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} />}
+          {page === 'modelo-carajo' && <ProductDetailPage key="modelo-carajo" productId="carajo" initialVariant={selectedVariant} setPage={setPage} engravingText={globalEngraving} setEngravingText={setGlobalEngraving} onAddToCart={handleAddToCart} />}
           {page === 'faq' && <FAQPage key="faq" onBack={() => setPage('home')} />}
           {page === 'terms' && <TermsPage key="terms" onBack={() => setPage('home')} />}
           {page === 'warranty' && <WarrantyPage key="warranty" onBack={() => setPage('home')} />}
@@ -1190,21 +1329,12 @@ export default function App() {
 
       <Footer setPage={setPage} />
 
-      {/* Mobile Bottom Nav */}
-      <div className="hidden min-[390px]:flex md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-50 bg-stone-950/90 backdrop-blur-xl border border-white/10 px-8 py-3 rounded-full gap-8 shadow-2xl items-center">
-        <button onClick={() => setPage('home')} className={`${page === 'home' ? 'text-primary' : 'text-secondary'}`}>
-          <Home size={20} />
-        </button>
-        <button onClick={() => setPage('personalize')} className={`${page === 'personalize' ? 'text-primary' : 'text-secondary'}`}>
-          <Palette size={20} />
-        </button>
-        <button onClick={() => setPage('collection')} className={`${page === 'collection' ? 'text-primary' : 'text-secondary'}`}>
-          <Watch size={20} />
-        </button>
-        <button onClick={() => setPage('nosotros')} className={`${page === 'nosotros' ? 'text-primary' : 'text-secondary'} flex items-center justify-center`}>
-          <span className="font-habibi text-xl leading-none">V</span>
-        </button>
-      </div>
+      <CartDrawer 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        cart={cart} 
+        onRemoveItem={handleRemoveFromCart} 
+      />
     </div>
   );
 }
