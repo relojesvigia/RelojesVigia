@@ -149,6 +149,9 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -173,6 +176,12 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
                 {link.label}
               </button>
             ))}
+            <button 
+              onClick={() => { setPage('collection'); setIsMobileMenuOpen(false); }} 
+              className="bg-primary text-on-primary px-8 py-4 rounded-full font-serif tracking-[0.2em] uppercase text-xs w-full"
+            >
+              COMPRA AHORA
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -479,10 +488,33 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
       exit={{ opacity: 0 }}
       className="pt-16 md:pt-32 pb-16 md:pb-20 px-6 md:px-12 max-w-screen-2xl mx-auto"
     >
-      <header className="mb-12 md:mb-20">
+      <header className="mb-8 md:mb-10">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 block">Colección Actual</span>
         <h1 className="text-5xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Relojes</h1>
       </header>
+
+      <div className="flex flex-wrap items-center gap-3 mb-10 border-b border-white/5 pb-6">
+        <span className="text-[10px] tracking-[0.2em] uppercase text-outline mr-2 hidden md:block">Filtros:</span>
+        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
+          <option value="">Color</option>
+          <option value="negro">Negro</option>
+          <option value="blanco">Blanco</option>
+          <option value="azul">Azul</option>
+          <option value="verde">Verde</option>
+        </select>
+        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
+          <option value="">Materiales</option>
+          <option value="acero">Acero</option>
+          <option value="oro">Oro</option>
+          <option value="plata">Plata</option>
+          <option value="cobre">Cobre</option>
+        </select>
+        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
+          <option value="">Correa</option>
+          <option value="metalica">Metálica</option>
+          <option value="cuero">Cuero</option>
+        </select>
+      </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12 mb-16 md:mb-32">
         {/* Product 1 */}
@@ -704,10 +736,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
               <div className="flex justify-between items-end">
                 <div>
                   <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio</span>
-                  <span className={`font-serif text-on-surface block ${livePrice === "Calculando..." || livePrice === "No Disponible" || livePrice === "Error de conexión" ? "text-xl text-secondary italic" : "text-4xl"}`}>
+                  <span className={`font-serif text-on-surface ${livePrice === "Calculando..." || livePrice === "No Disponible" || livePrice === "Error de conexión" ? "text-xl text-secondary italic" : "text-4xl"}`}>
                     {livePrice}
                   </span>
-                  <span className="text-[9px] tracking-[0.1em] uppercase text-secondary/70 mt-1 block">(Impuestos incluidos)</span>
+                  {livePrice !== "Calculando..." && livePrice !== "No Disponible" && livePrice !== "Error de conexión" && (
+                    <span className="block text-[9px] text-secondary mt-1 tracking-widest uppercase">Impuestos incluidos</span>
+                  )}
                 </div>
                 <div className="text-right">
                   <span className={`text-[10px] tracking-[0.2em] uppercase block mb-1 ${isAvailable ? 'text-primary' : (livePrice === "Calculando..." ? 'text-secondary' : 'text-red-500')}`}>
@@ -787,12 +821,12 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
               </div>
             </div>
 
-            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-6 gap-x-4">
+            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-8 gap-x-4">
               {[
-                { icon: <Shield size={18} />, text: "Garantía de 24 meses" },
-                { icon: <UserCheck size={18} />, text: "Trato Personal" },
-                { icon: <MapPin size={18} />, text: "Hecho en México" },
-                { icon: <Truck size={18} />, text: "Envíos a toda la república" },
+                { icon: <Shield size={16} />, text: "Garantía de 24 meses" },
+                { icon: <UserCheck size={16} />, text: "Trato Personal" },
+                { icon: <MapPin size={16} />, text: "Hecho en México" },
+                { icon: <Truck size={16} />, text: "Envíos a toda la república" },
               ].map((badge, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <span className="text-primary shrink-0">{badge.icon}</span>
@@ -1198,7 +1232,7 @@ const CartDrawer = ({ isOpen, onClose, cart, onRemoveItem }: { isOpen: boolean, 
                     {new Intl.NumberFormat('es-MX', { style: 'currency', currency: cart.cost.totalAmount.currencyCode }).format(cart.cost.totalAmount.amount)}
                   </span>
                 </div>
-                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos incluidos. Envíos calculados al pagar</p>
+                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos incluidos. Envío calculado al pagar.</p>
                 <a 
                   href={cart.checkoutUrl}
                   className="w-full block text-center py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow"
