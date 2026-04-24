@@ -143,12 +143,6 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
           )}
         </button>
         <button 
-          onClick={() => setPage('collection')} 
-          className="hidden sm:block bg-primary text-on-primary px-8 py-2.5 rounded-full font-serif tracking-[0.2em] uppercase text-[10px] transition-all hover:scale-105 hover:shadow-glow"
-        >
-          COMPRA AHORA
-        </button>
-        <button 
           className="md:hidden text-on-surface"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -179,12 +173,6 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
                 {link.label}
               </button>
             ))}
-            <button 
-              onClick={() => { setPage('collection'); setIsMobileMenuOpen(false); }} 
-              className="bg-primary text-on-primary px-8 py-4 rounded-full font-serif tracking-[0.2em] uppercase text-xs w-full"
-            >
-              COMPRA AHORA
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -716,15 +704,16 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
               <div className="flex justify-between items-end">
                 <div>
                   <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-1">Precio</span>
-                  <span className={`font-serif text-on-surface ${livePrice === "Calculando..." || livePrice === "No Disponible" || livePrice === "Error de conexión" ? "text-xl text-secondary italic" : "text-4xl"}`}>
+                  <span className={`font-serif text-on-surface block ${livePrice === "Calculando..." || livePrice === "No Disponible" || livePrice === "Error de conexión" ? "text-xl text-secondary italic" : "text-4xl"}`}>
                     {livePrice}
                   </span>
+                  <span className="text-[9px] tracking-[0.1em] uppercase text-secondary/70 mt-1 block">(Impuestos incluidos)</span>
                 </div>
                 <div className="text-right">
                   <span className={`text-[10px] tracking-[0.2em] uppercase block mb-1 ${isAvailable ? 'text-primary' : (livePrice === "Calculando..." ? 'text-secondary' : 'text-red-500')}`}>
                     {livePrice === "Calculando..." ? 'CONECTANDO...' : (isAvailable ? 'En Stock' : 'Agotado')}
                   </span>
-                  <span className="text-xs text-secondary">{livePrice === "Calculando..." ? 'Verificando con Atelier' : (isAvailable ? 'Entrega de Atelier' : 'No disponible')}</span>
+                  <span className="text-xs text-secondary">{livePrice === "Calculando..." ? 'Verificando con Artesano' : (isAvailable ? 'Entrega de Artesano' : 'No disponible')}</span>
                 </div>
               </div>
 
@@ -800,14 +789,14 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
 
             <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-6 gap-x-4">
               {[
-                { icon: <Shield size={14} />, text: "Garantía de 24 meses" },
-                { icon: <UserCheck size={14} />, text: "Trato Personal" },
-                { icon: <MapPin size={14} />, text: "Hecho en México" },
-                { icon: <Truck size={14} />, text: "Envíos a toda la república" },
+                { icon: <Shield size={18} />, text: "Garantía de 24 meses" },
+                { icon: <UserCheck size={18} />, text: "Trato Personal" },
+                { icon: <MapPin size={18} />, text: "Hecho en México" },
+                { icon: <Truck size={18} />, text: "Envíos a toda la república" },
               ].map((badge, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <span className="text-primary shrink-0">{badge.icon}</span>
-                  <span className="text-[9px] tracking-[0.1em] uppercase text-secondary leading-tight">{badge.text}</span>
+                  <span className="text-[11px] md:text-xs tracking-[0.1em] uppercase text-secondary leading-tight">{badge.text}</span>
                 </div>
               ))}
             </div>
@@ -1209,7 +1198,7 @@ const CartDrawer = ({ isOpen, onClose, cart, onRemoveItem }: { isOpen: boolean, 
                     {new Intl.NumberFormat('es-MX', { style: 'currency', currency: cart.cost.totalAmount.currencyCode }).format(cart.cost.totalAmount.amount)}
                   </span>
                 </div>
-                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos y envíos calculados al pagar</p>
+                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos incluidos. Envíos calculados al pagar</p>
                 <a 
                   href={cart.checkoutUrl}
                   className="w-full block text-center py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow"
