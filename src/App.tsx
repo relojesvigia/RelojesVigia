@@ -35,7 +35,7 @@ import {
 
 // --- Types ---
 
-type Page = 'home' | 'collection' | 'nosotros' | 'personalize' | 'modelo-carajo' | 'faq' | 'terms' | 'warranty';
+type Page = 'home' | 'collection' | 'nosotros' | 'personalize' | 'modelo-carajo' | 'faq' | 'terms' | 'warranty' | 'ocasiones';
 
 interface ProductVariant {
   color: 'NEGRO' | 'BLANCO';
@@ -134,7 +134,7 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
       </div>
 
       <div className="flex items-center gap-4">
-        <button onClick={onOpenCart} className="relative text-on-surface hover:text-primary transition-colors p-2 md:mr-2">
+        <button aria-label="Abrir carrito" onClick={onOpenCart} className="relative text-on-surface hover:text-primary transition-colors p-2 md:mr-2">
           <ShoppingBag size={20} />
           {cartItemCount > 0 && (
             <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-on-primary text-[10px] rounded-full flex items-center justify-center font-bold shadow-glow">
@@ -143,12 +143,10 @@ const Navbar = ({ currentPage, setPage, cartItemCount, onOpenCart }: { currentPa
           )}
         </button>
         <button 
+          aria-label="Menú móvil"
           className="md:hidden text-on-surface"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -222,17 +220,17 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
 
       <div className="flex flex-col gap-6 md:items-end">
         <div className="flex gap-4">
-          <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
+          <a href="#" aria-label="Instagram" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
             <Instagram size={18} />
           </a>
-          <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
+          <a href="#" aria-label="Facebook" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
             <Facebook size={18} />
           </a>
-          <a href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
+          <a href="https://wa.me/4422553528?text=Hola,%20tengo%20una%20duda%20acerca%20de%20los%20relojes%20Vigia" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-primary hover:border-primary transition-all">
             <svg fill="currentColor" viewBox="0 0 24 24" width="18" height="18" className="shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
         </div>
-        <div className="text-[10px] tracking-[0.2em] uppercase text-outline">
+        <div className="text-[10px] tracking-[0.2em] uppercase text-secondary">
           © 2026 VIGIA. HECHO EN MÉXICO.
         </div>
       </div>
@@ -362,19 +360,19 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
             
             <div className="grid grid-cols-2 gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-8 mb-10 md:mb-16">
               <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Material</span>
+                <span className="text-[10px] tracking-[0.2em] uppercase text-secondary block mb-2">Material</span>
                 <span className="text-xl font-serif text-on-surface">Acero 316L</span>
               </div>
               <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Cristal</span>
+                <span className="text-[10px] tracking-[0.2em] uppercase text-secondary block mb-2">Cristal</span>
                 <span className="text-xl font-serif text-on-surface">Zafiro</span>
               </div>
               <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Movimiento</span>
+                <span className="text-[10px] tracking-[0.2em] uppercase text-secondary block mb-2">Movimiento</span>
                 <span className="text-xl font-serif text-on-surface">Automático Japonés</span>
               </div>
               <div>
-                <span className="text-[10px] tracking-[0.2em] uppercase text-outline block mb-2">Resistencia</span>
+                <span className="text-[10px] tracking-[0.2em] uppercase text-secondary block mb-2">Resistencia</span>
                 <span className="text-xl font-serif text-on-surface">5 ATM</span>
               </div>
             </div>
@@ -395,21 +393,21 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16">
           <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-6xl font-serif text-white/5 mb-4 md:mb-6">01</span>
+            <span className="text-4xl md:text-6xl font-serif text-white/20 mb-4 md:mb-6">01</span>
             <h3 className="text-lg md:text-xl font-serif tracking-[0.1em] uppercase mb-2 md:mb-4">Elige tu reloj</h3>
             <p className="text-secondary text-xs md:text-sm leading-relaxed max-w-xs">
               Selecciona uno de nuestros modelos de reloj de acero.
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-6xl font-serif text-white/5 mb-4 md:mb-6">02</span>
+            <span className="text-4xl md:text-6xl font-serif text-white/20 mb-4 md:mb-6">02</span>
             <h3 className="text-lg md:text-xl font-serif tracking-[0.1em] uppercase mb-2 md:mb-4">Define el mensaje</h3>
             <p className="text-secondary text-xs md:text-sm leading-relaxed max-w-xs">
               Nombres, fechas o coordenadas. Grabado con precisión láser en el reverso o corona.
             </p>
           </div>
           <div className="flex flex-col items-center">
-            <span className="text-4xl md:text-6xl font-serif text-white/5 mb-4 md:mb-6">03</span>
+            <span className="text-4xl md:text-6xl font-serif text-white/20 mb-4 md:mb-6">03</span>
             <h3 className="text-lg md:text-xl font-serif tracking-[0.1em] uppercase mb-2 md:mb-4">Forja la herencia</h3>
             <p className="text-secondary text-xs md:text-sm leading-relaxed max-w-xs">
               Recibe una pieza única que guardará tu historia para las próximas generaciones.
@@ -421,31 +419,31 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void, key?: string }) => 
       {/* Lifestyle Grid */}
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-screen-2xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 h-auto md:h-[800px]">
-          <div className="md:col-span-1 relative group overflow-hidden rounded-2xl">
+          <div onClick={() => { setPage('ocasiones'); setTimeout(() => document.getElementById('parejas')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="md:col-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
             <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp" alt="Parejas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Para Parejas</span>
             </div>
           </div>
-          <div className="md:col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl">
+          <div onClick={() => { setPage('ocasiones'); setTimeout(() => document.getElementById('hijos')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="md:col-span-1 md:row-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
             <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" alt="Hijos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">De Padres a Hijos</span>
             </div>
           </div>
-          <div className="md:col-span-2 relative group overflow-hidden rounded-2xl">
+          <div onClick={() => { setPage('ocasiones'); setTimeout(() => document.getElementById('hitos')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="md:col-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
             <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp" alt="Hitos" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Hitos Personales</span>
             </div>
           </div>
-          <div className="md:col-span-1 relative group overflow-hidden rounded-2xl">
+          <div onClick={() => { setPage('ocasiones'); setTimeout(() => document.getElementById('fechas')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="md:col-span-1 relative group overflow-hidden rounded-2xl cursor-pointer">
             <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp" alt="Fechas" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">Fechas Eternas</span>
             </div>
           </div>
-          <div className="md:col-span-2 relative group overflow-hidden rounded-2xl">
+          <div onClick={() => { setPage('ocasiones'); setTimeout(() => document.getElementById('regalo')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="md:col-span-2 relative group overflow-hidden rounded-2xl cursor-pointer">
             <img src="https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp" alt="Regalo" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
               <span className="font-serif tracking-[0.2em] uppercase text-xs">El Regalo Perfecto</span>
@@ -488,33 +486,10 @@ const CollectionPage = ({ setPage, setSelectedVariant }: { setPage: (p: Page) =>
       exit={{ opacity: 0 }}
       className="pt-16 md:pt-32 pb-16 md:pb-20 px-6 md:px-12 max-w-screen-2xl mx-auto"
     >
-      <header className="mb-8 md:mb-10">
+      <header className="mb-12 md:mb-20">
         <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-4 block">Colección Actual</span>
         <h1 className="text-5xl md:text-8xl font-serif text-on-surface leading-none">Nuestros Relojes</h1>
       </header>
-
-      <div className="flex flex-wrap items-center gap-3 mb-10 border-b border-white/5 pb-6">
-        <span className="text-[10px] tracking-[0.2em] uppercase text-outline mr-2 hidden md:block">Filtros:</span>
-        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
-          <option value="">Color</option>
-          <option value="negro">Negro</option>
-          <option value="blanco">Blanco</option>
-          <option value="azul">Azul</option>
-          <option value="verde">Verde</option>
-        </select>
-        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
-          <option value="">Materiales</option>
-          <option value="acero">Acero</option>
-          <option value="oro">Oro</option>
-          <option value="plata">Plata</option>
-          <option value="cobre">Cobre</option>
-        </select>
-        <select className="bg-surface-lowest border border-white/10 rounded-full px-5 py-2.5 text-[9px] uppercase tracking-[0.15em] text-secondary focus:outline-none focus:border-primary appearance-none cursor-pointer hover:border-white/30 transition-colors">
-          <option value="">Correa</option>
-          <option value="metalica">Metálica</option>
-          <option value="cuero">Cuero</option>
-        </select>
-      </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12 mb-16 md:mb-32">
         {/* Product 1 */}
@@ -740,7 +715,7 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
                     {livePrice}
                   </span>
                   {livePrice !== "Calculando..." && livePrice !== "No Disponible" && livePrice !== "Error de conexión" && (
-                    <span className="block text-[9px] text-secondary mt-1 tracking-widest uppercase">Impuestos incluidos</span>
+                    <span className="text-[9px] tracking-[0.15em] text-secondary/60 uppercase block mt-1">Impuestos incluidos</span>
                   )}
                 </div>
                 <div className="text-right">
@@ -821,16 +796,16 @@ const ProductDetailPage = ({ productId, initialVariant, setPage, key, engravingT
               </div>
             </div>
 
-            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-8 gap-x-4">
+            <div className="pt-8 border-t border-white/5 grid grid-cols-2 gap-y-6 gap-x-4">
               {[
-                { icon: <Shield size={16} />, text: "Garantía de 24 meses" },
-                { icon: <UserCheck size={16} />, text: "Trato Personal" },
-                { icon: <MapPin size={16} />, text: "Hecho en México" },
-                { icon: <Truck size={16} />, text: "Envíos a toda la república" },
+                { icon: <Shield size={18} />, text: "Garantía de 24 meses" },
+                { icon: <UserCheck size={18} />, text: "Trato Personal" },
+                { icon: <MapPin size={18} />, text: "Hecho en México" },
+                { icon: <Truck size={18} />, text: "Envíos a toda la república" },
               ].map((badge, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <div key={i} className="flex items-center gap-4">
                   <span className="text-primary shrink-0">{badge.icon}</span>
-                  <span className="text-[11px] md:text-xs tracking-[0.1em] uppercase text-secondary leading-tight">{badge.text}</span>
+                  <span className="text-xs tracking-[0.15em] uppercase text-secondary leading-tight">{badge.text}</span>
                 </div>
               ))}
             </div>
@@ -1157,6 +1132,107 @@ const AboutPage = ({ key }: { key?: string }) => {
   );
 };
 
+const OcasionesPage = ({ setPage }: { setPage: (p: Page) => void }) => {
+  const occasions = [
+    {
+      id: "parejas",
+      title: "Para Parejas",
+      subtitle: "Un secreto compartido en acero",
+      text: "Un grabado que sella un compromiso. Coordenadas del lugar donde todo comenzó, iniciales entrelazadas o una fecha que marcó su historia. El acero guarda el secreto de dos personas, resistiendo el paso del tiempo tanto como su vínculo.",
+      image: "https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White3.webp"
+    },
+    {
+      id: "hijos",
+      title: "De Padres a Hijos",
+      subtitle: "Pasar el testigo del tiempo",
+      text: "Más que un objeto, una herencia. Entregar un reloj es entregar responsabilidad y confianza. Un mensaje en el reverso que dicta 'Siempre contigo' o 'Crea tu propio camino'. Un legado físico que acompañará a la siguiente generación en cada segundo de su vida.",
+      image: "https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White1.webp"
+    },
+    {
+      id: "hitos",
+      title: "Hitos Personales",
+      subtitle: "El monumento a tu propio esfuerzo",
+      text: "El premio a la perseverancia. Una graduación, el primer gran logro profesional o la superación de un obstáculo que parecía insuperable. Graba la fecha de tu victoria o la frase que te mantuvo en pie. Un recordatorio constante de tu propia fuerza y resiliencia.",
+      image: "https://x5ue9cp6zjzexrab.public.blob.vercel-storage.com/Carajo%20Blanco%20imagenes/White2.webp"
+    },
+    {
+      id: "fechas",
+      title: "Fechas Eternas",
+      subtitle: "Detener el tiempo en un instante",
+      text: "El tiempo es efímero, pero los días cruciales pueden ser eternos. Un nacimiento, un aniversario, el día que cambiaste el rumbo de tu vida. Inmortaliza ese momento exacto en el metal, donde las manecillas nunca podrán borrar el recuerdo.",
+      image: "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1200"
+    },
+    {
+      id: "regalo",
+      title: "El Regalo Perfecto",
+      subtitle: "Cuando lo ordinario no es suficiente",
+      text: "Cuando las palabras se quedan cortas, el acero habla. Un regalo personalizado demuestra que has pensado en cada detalle. No es solo un reloj de alta relojería y precisión, es una pieza única en el mundo, diseñada exclusivamente para esa persona excepcional.",
+      image: "https://images.unsplash.com/photo-1508685096489-7aac291ba597?auto=format&fit=crop&q=80&w=1000"
+    }
+  ];
+
+  return (
+    <motion.div 
+      key="ocasiones-content"
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      className="flex flex-col pt-24 md:pt-40 pb-24"
+    >
+      <section className="px-6 md:px-12 max-w-7xl mx-auto text-center mb-20 md:mb-32">
+        <span className="font-serif text-primary tracking-[0.3em] uppercase text-[10px] md:text-xs mb-6 block">Personalización Significativa</span>
+        <h1 className="text-4xl md:text-7xl font-serif text-on-surface leading-tight max-w-4xl mx-auto">
+          Un reloj para cada historia. Un grabado para la eternidad.
+        </h1>
+      </section>
+
+      <div className="space-y-24 md:space-y-40">
+        {occasions.map((occ, i) => (
+          <section key={occ.id} id={occ.id} className="px-6 md:px-12 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
+            <div className={`relative ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
+              <div className="aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl border border-white/5">
+                <img 
+                  src={occ.image} 
+                  alt={occ.title} 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+            
+            <div className={`flex flex-col justify-center ${i % 2 === 1 ? 'lg:order-1' : ''}`}>
+              <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-4">0{i + 1} — {occ.title}</span>
+              <h2 className="text-3xl md:text-5xl font-serif text-on-surface mb-6 leading-tight">{occ.subtitle}</h2>
+              <p className="text-secondary text-base md:text-lg font-light leading-relaxed mb-10">
+                {occ.text}
+              </p>
+              <button 
+                onClick={() => setPage('personalize')}
+                className="self-start px-8 py-4 border border-outline text-on-surface rounded-full font-serif tracking-[0.2em] uppercase text-[10px] transition-all hover:bg-white/5 active:scale-[0.98]"
+              >
+                CREAR ESTE REGALO
+              </button>
+            </div>
+          </section>
+        ))}
+      </div>
+      
+      <section className="mt-32 px-6 text-center">
+        <div className="max-w-3xl mx-auto bg-surface-low p-12 rounded-3xl border border-white/5">
+          <h3 className="text-2xl md:text-4xl font-serif text-on-surface mb-6">¿Listo para dejar tu marca?</h3>
+          <p className="text-secondary mb-10 font-light">Explora nuestra colección y descubre el lienzo de acero perfecto para tu mensaje.</p>
+          <button 
+            onClick={() => setPage('collection')}
+            className="bg-primary text-on-primary px-10 py-5 rounded-full font-bold uppercase tracking-[0.2em] text-xs hover:brightness-110 active:scale-[0.98] transition-all shadow-glow"
+          >
+            VER COLECCIÓN
+          </button>
+        </div>
+      </section>
+    </motion.div>
+  );
+};
+
 const CartDrawer = ({ isOpen, onClose, cart, onRemoveItem }: { isOpen: boolean, onClose: () => void, cart: any, onRemoveItem: (lineId: string) => void }) => {
   return (
     <AnimatePresence>
@@ -1227,12 +1303,14 @@ const CartDrawer = ({ isOpen, onClose, cart, onRemoveItem }: { isOpen: boolean, 
             {cart && cart.lines?.edges?.length > 0 && (
               <div className="p-6 border-t border-white/10 bg-surface-low space-y-6">
                 <div className="flex justify-between items-center text-on-surface">
-                  <span className="text-xs tracking-widest uppercase text-secondary">Subtotal</span>
+                  <span className="text-xs tracking-widest uppercase text-secondary">
+                    Subtotal <span className="text-[9px] tracking-[0.1em] opacity-60 lowercase">(impuestos incluidos)</span>
+                  </span>
                   <span className="font-serif text-xl">
                     {new Intl.NumberFormat('es-MX', { style: 'currency', currency: cart.cost.totalAmount.currencyCode }).format(cart.cost.totalAmount.amount)}
                   </span>
                 </div>
-                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">Impuestos incluidos. Envío calculado al pagar.</p>
+                <p className="text-[10px] text-secondary tracking-widest uppercase text-center">El costo de envío se calculará en la pantalla de pago</p>
                 <a 
                   href={cart.checkoutUrl}
                   className="w-full block text-center py-5 bg-primary text-on-primary rounded-full font-bold uppercase tracking-[0.2em] text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-glow"
@@ -1254,7 +1332,7 @@ export default function App() {
   const [globalEngraving, setGlobalEngraving] = useState('');
   const [page, setPage] = useState<Page>(() => {
     const hash = window.location.hash.replace('#', '') as Page;
-    const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
+    const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty', 'ocasiones'];
     return validPages.includes(hash) ? hash : 'home';
   });
   const [selectedVariant, setSelectedVariant] = useState<'NEGRO' | 'BLANCO'>('NEGRO');
@@ -1322,7 +1400,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as Page;
-      const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty'];
+      const validPages: Page[] = ['home', 'collection', 'nosotros', 'personalize', 'modelo-carajo', 'faq', 'terms', 'warranty', 'ocasiones'];
       if (validPages.includes(hash)) {
         setPage(hash);
       } else if (hash === '') {
@@ -1347,6 +1425,7 @@ export default function App() {
           {page === 'faq' && <FAQPage key="faq" onBack={() => setPage('home')} />}
           {page === 'terms' && <TermsPage key="terms" onBack={() => setPage('home')} />}
           {page === 'warranty' && <WarrantyPage key="warranty" onBack={() => setPage('home')} />}
+          {page === 'ocasiones' && <OcasionesPage key="ocasiones" setPage={setPage} />}
         </AnimatePresence>
       </main>
 
