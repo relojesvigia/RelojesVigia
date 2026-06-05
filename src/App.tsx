@@ -1591,6 +1591,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-surface text-on-surface selection:bg-primary/30 selection:text-primary overflow-x-hidden">
+      <style>{`
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: flex;
+          width: max-content;
+          animation: marquee 70s linear infinite;
+        }
+        .ticker-wrapper {
+          overflow: hidden;
+          position: relative;
+        }
+      `}</style>
       <Navbar currentPage={page} setPage={setPage} cartItemCount={cartItemCount} onOpenCart={() => setIsCartOpen(true)} />
       
       <main className="flex-grow">

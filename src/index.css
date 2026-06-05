@@ -8,10 +8,10 @@
 
   --color-primary: #e4bfaa;
   --color-on-primary: #422b1d;
-  --color-surface: #131313;
-  --color-surface-low: #1b1b1b;
-  --color-surface-lowest: #0e0e0e;
-  --color-surface-highest: #353535;
+  --color-surface: #0d0c0c;
+  --color-surface-low: #1a1817;
+  --color-surface-lowest: #0d0c0c;
+  --color-surface-highest: #242120;
   --color-on-surface: #e2e2e2;
   --color-secondary: #ccc5c1;
   --color-outline: #4d4541;
@@ -35,4 +35,21 @@
 
 .shadow-glow {
   box-shadow: 0 0 20px rgba(228, 191, 170, 0.2);
+}
+
+/* Infinite marquee ticker */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 70s linear infinite;
+}
+
+.ticker-wrapper {
+  overflow: hidden;
+  position: relative;
 }
